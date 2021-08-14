@@ -66,9 +66,9 @@ end
 
 function QuadEdge(...) -- I could've used __call metamethod
 	local onext, rot, orig = ...
+	-- 69 funni number
 	
-	
-	local self = setmetatable({}, _quadEdgeCache) -- 69 funni number
+	local self = setmetatable({}, _quadEdgeCache)
 		  self.onext = onext -- QuadEdge
 		  self.mark = false -- tmp
 		  self.orig = orig -- point
