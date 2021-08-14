@@ -1,37 +1,37 @@
 --[[ GRID (raw results)
 	total includes interval, therefore you shouldn't be taking in consideration those values
 
-	p=100  		average : 0.0014800143241882s total : 0.14800143241882s
-	p=1000 		average : 0.020110020637512s  total : 2.0110020637512s
-	p=25000		average : 0.55484000444412s	  total : 55.484000444412s
-	p=50000		average : 0.99973999500275s	  total : 99.973999500275s
-	p=75000		average : 1.7518099975586s	  total : 175.18099975586s
-	p=150000	average : 3.0616900014877s	  total : 306.16900014877s
-	p=350000	average : 7.1958499932289s	  total : 719.58499932289s
+	p=100  		average : 0.0014800143241882s 		total : 0.14800143241882s
+	p=1000 		average : 0.020110020637512s  		total : 2.0110020637512s
+	p=25000		average : 0.55484000444412s   		total : 55.484000444412s
+	p=50000		average : 0.99973999500275s   		total : 99.973999500275s
+	p=75000		average : 1.7518099975586s	  	total : 175.18099975586s
+	p=150000	average : 3.0616900014877s	  	total : 306.16900014877s
+	p=350000	average : 7.1958499932289s	  	total : 719.58499932289s
 ]]
 
 --[[ Random uniform (raw results)
 	total includes interval, therefore you shouldn't be taking in consideration those values
 
-	p=100  		average : 0.009019992351532s  total : 0.9019992351532s
-	p=500		average : 0.050649988651276s  total : 5.0649988651276s
-	p=1000 		average : 0.12462999820709s	  total : 12.462999820709s
-	p=2500		average : 0.27856999874115s   total : 27.856999874115s
-	p=75000		average : 13.023799991608s    total : 65.118999958038s
-	p=150000	average : 30.230399942398s	  total : 151.15199971199s
-	p=350000	average : 79.381199979782s	  total : 396.90599989891s
+	p=100  		average : 0.009019992351532s 		total : 0.9019992351532s
+	p=500		average : 0.050649988651276s  		total : 5.0649988651276s
+	p=1000 		average : 0.12462999820709s	 	total : 12.462999820709s
+	p=2500		average : 0.27856999874115s   		total : 27.856999874115s
+	p=75000		average : 13.023799991608s    		total : 65.118999958038s
+	p=150000	average : 30.230399942398s	  	total : 151.15199971199s
+	p=350000	average : 79.381199979782s	  	total : 396.90599989891s
 ]]
 
 --[[ Multivariate Normal Distribution (raw results)
 	total includes interval, therefore you shouldn't be taking in consideration those values
 
-	p=100  		average : 0.0095699977874756s total : 0.95699977874756s
-	p=500		average : 0.049230010509491s  total : 4.9230010509491s
-	p=1000 		average : 0.11671998977661s   total : 11.671998977661s
-	p=2500		average : 0.27165999889374s   total : 27.165999889374s
-	p=75000		average : 14.405400085449s	  total : 72.027000427246s
-	p=150000	average : 27.080199956894s    total : 135.40099978447s
-	p=350000	average : 71.710200023651s	  total : 358.55100011826s
+	p=100  		average : 0.0095699977874756s 		total : 0.95699977874756s
+	p=500		average : 0.049230010509491s  		total : 4.9230010509491s
+	p=1000 		average : 0.11671998977661s   		total : 11.671998977661s
+	p=2500		average : 0.27165999889374s   		total : 27.165999889374s
+	p=75000		average : 14.405400085449s	  	total : 72.027000427246s
+	p=150000	average : 27.080199956894s    		total : 135.40099978447s
+	p=350000	average : 71.710200023651s	  	total : 358.55100011826s
 	
 ]]
 
