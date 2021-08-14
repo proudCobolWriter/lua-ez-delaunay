@@ -22,19 +22,19 @@
 		 	* Just another useless util function for ease of use-
 		 	*
 		 	* @param tbl array-like table containing the edges
-     	 	* @param callback (void) function that gets called for each triangle processed
-     	 	* @param multithread defines whether we use the built-in roblox ``task`` lib
-     	 	*
-     	 	* @return array-like table containing a set of 3 edges (x: float, y: float) each
+     	 		* @param callback (void) function that gets called for each triangle processed
+     	 		* @param multithread defines whether we use the built-in roblox ``task`` lib
+     	 		*
+     	 		* @return array-like table containing a set of 3 edges (x: float, y: float) each
 	
 
 	ADDENDUM: This module doesn't support native lua, it was written in Luau fashion (roblox) which occasionally uses the extended Roblox syntax 
-			  running this piece of code in a native lua interpreter will raise a syntax error
+		  running this piece of code in a native lua interpreter will raise a syntax error
+		  
+		  Although, if you have little knowledge with luau you should be able to make it work, as luau features
+		  the C++ assignment operators and typechecking.
 			  
-			  Although, if you have little knowledge with luau you should be able to make it work, as luau features
-			  the C++ assignment operators and typechecking.
-			  
-			  Be aware that the metatables might behave differently in some cases - you might want to make some subtle changes for it to work
+		  Be aware that the metatables might behave differently in some cases - you might want to make some subtle changes for it to work
 
 ]]
 
@@ -123,8 +123,8 @@ end
 
 --[[ ccw function
 	* Computes | a.x  a.y  1 |
-               | b.x  b.y  1 | > 0
-               | c.x  c.y  1 |
+               	   | b.x  b.y  1 | > 0
+                   | c.x  c.y  1 |
 
 	* @param a point
 	* @param b point
@@ -396,7 +396,7 @@ return {
 		 *
 		 * @param pointsArray contains a list of dictionaries as {[string]: float}
 		 ** example use case : { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
-     	 * @return an array-like table containing the faces
+     	 	 * @return an array-like table containing the faces
 	]]
 
 	triangulate = function (pointsArray)
@@ -534,9 +534,9 @@ return {
 		 * Just another useless util function for ease of use-
 		 *
 		 * @param tbl array-like table containing the edges
-     	 * @param callback (void) function that gets called for each triangle processed
-     	 * @param multithread defines whether we use the built-in roblox ``task`` lib
-     	 * @return array-like table containing a set of 3 edges (x: float, y: float) each
+     	 	 * @param callback (void) function that gets called for each triangle processed
+     	 	 * @param multithread defines whether we use the built-in roblox ``task`` lib
+     	 	 * @return array-like table containing a set of 3 edges (x: float, y: float) each
      	 
 	]]
 	
