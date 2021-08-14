@@ -1,0 +1,261 @@
+--[[ GRID (raw results)
+	total includes interval, therefore you shouldn't be taking in consideration those values
+
+	p=100  		average : 0.0014800143241882s total : 0.14800143241882s
+	p=1000 		average : 0.020110020637512s  total : 2.0110020637512s
+	p=25000		average : 0.55484000444412s	  total : 55.484000444412s
+	p=50000		average : 0.99973999500275s	  total : 99.973999500275s
+	p=75000		average : 1.7518099975586s	  total : 175.18099975586s
+	p=150000	average : 3.0616900014877s	  total : 306.16900014877s
+	p=350000	average : 7.1958499932289s	  total : 719.58499932289s
+]]
+
+--[[ Random uniform (raw results)
+	total includes interval, therefore you shouldn't be taking in consideration those values
+
+	p=100  		average : 0.009019992351532s  total : 0.9019992351532s
+	p=500		average : 0.050649988651276s  total : 5.0649988651276s
+	p=1000 		average : 0.12462999820709s	  total : 12.462999820709s
+	p=2500		average : 0.27856999874115s   total : 27.856999874115s
+	p=75000		average : 13.023799991608s    total : 65.118999958038s
+	p=150000	average : 30.230399942398s	  total : 151.15199971199s
+	p=350000	average : 79.381199979782s	  total : 396.90599989891s
+]]
+
+--[[ Multivariate Normal Distribution (raw results)
+	total includes interval, therefore you shouldn't be taking in consideration those values
+
+	p=100  		average : 0.0095699977874756s total : 0.95699977874756s
+	p=500		average : 0.049230010509491s  total : 4.9230010509491s
+	p=1000 		average : 0.11671998977661s   total : 11.671998977661s
+	p=2500		average : 0.27165999889374s   total : 27.165999889374s
+	p=75000		average : 14.405400085449s	  total : 72.027000427246s
+	p=150000	average : 27.080199956894s    total : 135.40099978447s
+	p=350000	average : 71.710200023651s	  total : 358.55100011826s
+	
+]]
+
+
+
+
+
+
+local module = require(script.Parent:WaitForChild("ModuleScript"))
+
+local x_res, y_res = workspace.CurrentCamera.ViewportSize.X * 0.80, workspace.CurrentCamera.ViewportSize.Y * 0.80
+local result -- cache
+
+local players = game:GetService("Players")
+local plr = players.LocalPlayer
+local playergui = plr:WaitForChild("PlayerGui")
+local frame = playergui:WaitForChild("TESTGui"):WaitForChild("Frame")
+
+-- distributions
+
+local function regularDistribution(iterations, factor) -- uniform
+	local points = table.create(iterations)
+	
+	for i = 1, iterations, 1 do
+		points[i] = {x=math.random() * x_res * (factor or 1), y=math.random() * y_res * (factor or 1)}
+	end
+	
+	return points
+end
+
+local function stereographicDistribution(iterations, rows, exponent)
+	-- no exponent = linear
+	local points = table.create(iterations)
+	
+	local angle = 0
+	
+	for res = 1 / rows, 1, 1 / rows do
+		for i = 1, iterations / rows, 1 do
+			local res2 = exponent and math.pow((res * 2), exponent) or res
+			
+			angle += (math.pi * 2) / (iterations / rows)
+			
+			local x = (math.cos(angle) * res2 * 0.5 + 0.5) * x_res
+			local y = (math.sin(angle) * res2 * 0.5 + 0.5) * y_res
+			
+			points[#points + 1] = {x = x, y = y}
+		end
+	end
+	
+	return points
+end
+
+local function gridDistribution(iterations, rowSize, columnSize, jitterSize, factor)
+	local points = table.create(iterations)
+
+	for x = 0, math.ceil(x_res / rowSize), 1 do
+		for y = 0, math.ceil(y_res / columnSize), 1 do
+			if #points > iterations then return points end
+			points[#points + 1] = {x = (rowSize * x + jitterSize * math.random()) * factor, y = (columnSize * y + jitterSize * math.random()) * factor}
+		end
+	end
+
+	return points
+end
+
+local function pseudoNormal(n) -- gaussian
+	return math.min(n / 2 * ((math.random() + math.random() + math.random() + math.random() + math.random() + math.random()) - 3) / 3, n)
+end
+
+local function pseudoMultivariateNormalDistribution(iterations, factor)
+	local points = table.create(iterations)
+	
+	for i = 1, iterations, 1 do
+		points[i] = {x = pseudoNormal(x_res) * 2 * (factor or 1) + x_res * 0.50, y = pseudoNormal(y_res) * 2 * (factor or 1) + y_res * 0.50}
+	end
+	
+	return points
+end
+
+-- util
+local function createPoint(parent, x, y, size)
+	local instance = Instance.new("Frame")
+	
+	instance.Parent = parent
+	instance.Position = UDim2.new(0.10, x, 0.10, y)
+	instance.Size = UDim2.new(0, size or 5, 0, size or 5)
+	instance.BackgroundColor3 = Color3.fromRGB(185, 41, 41)
+	instance.BorderSizePixel = 0
+	instance.AnchorPoint = Vector2.new(0.5, 0.5)
+	instance.Name = "Vertice"
+	instance.ZIndex = 1000
+	
+	return instance
+end
+
+local function linkPoints(parent, p1, p2, size)
+	local segment = Instance.new("Frame")
+	local relative = p2 - p1
+	local angle = math.atan2(relative.Y, relative.X)
+	local mag = (relative.X ^ 2 + relative.Y ^ 2) ^ 0.5
+	
+	segment.Rotation = math.deg(angle)
+	segment.Position = UDim2.new(0.1, p1.X + relative.X * 0.5, 0.1, p1.Y + relative.Y * 0.5)
+	segment.Size = UDim2.new(0, mag, 0, size or 7)
+	segment.BorderSizePixel = 0
+	segment.AnchorPoint = Vector2.new(0.5, 0.5)
+	segment.Name = "Segment/Edge"
+	segment.BackgroundColor3 = Color3.fromRGB(17, 88, 255)
+	segment.Parent = parent
+	
+	
+	return segment
+end
+
+-- yo i literally spent a day trying to fix a loop that was wrongly iterated
+
+-- render / benchmarking
+--[[result = module.triangulate( regularDistribution(500) )
+
+-- random uniform
+
+for i = 1, #result, 3 do
+	local edge = result[i]
+	local edge1 = result[i + 1]
+	local edge2 = result[i + 2]
+	
+	linkPoints(frame, Vector2.new(edge.x, edge.y), Vector2.new(edge1.x, edge1.y), 3)
+	linkPoints(frame, Vector2.new(edge1.x, edge1.y), Vector2.new(edge2.x, edge2.y), 3)
+	linkPoints(frame, Vector2.new(edge2.x, edge2.y), Vector2.new(edge.x, edge.y), 3)
+
+	createPoint(frame, edge.x, edge.y, 8)
+end--]]
+
+--[[result = module.triangulate( gridDistribution(100, 100, 100, 0) )
+
+-- grid (equidistant points)
+
+for i = 1, #result, 3 do
+	local edge = result[i]
+	local edge1 = result[i + 1]
+	local edge2 = result[i + 2]
+
+	linkPoints(frame, Vector2.new(edge.x, edge.y), Vector2.new(edge1.x, edge1.y), 3)
+	linkPoints(frame, Vector2.new(edge1.x, edge1.y), Vector2.new(edge2.x, edge2.y), 3)
+	linkPoints(frame, Vector2.new(edge2.x, edge2.y), Vector2.new(edge.x, edge.y), 3)
+
+	createPoint(frame, edge.x, edge.y, 8)
+end--]]
+
+--[[result = module.triangulate( stereographicDistribution(100, 4, 2) )
+
+-- stereographic
+
+for i = 1, #result, 3 do
+	local edge = result[i]
+	local edge1 = result[i + 1]
+	local edge2 = result[i + 2]
+
+	linkPoints(frame, Vector2.new(edge.x, edge.y), Vector2.new(edge1.x, edge1.y), 3)
+	linkPoints(frame, Vector2.new(edge1.x, edge1.y), Vector2.new(edge2.x, edge2.y), 3)
+	linkPoints(frame, Vector2.new(edge2.x, edge2.y), Vector2.new(edge.x, edge.y), 3)
+
+	createPoint(frame, edge.x, edge.y, 8)
+end]]
+
+-- just some random shit i've been trying
+
+--[[result = module.triangulate( (function()
+	local points = {}
+	
+	local function boxmullerTransform(u, v)
+		u = u == 0 and math.random() or u
+		v = v == 0 and math.random() or v
+		return math.abs( (math.sqrt(-2 * math.log(u)) * math.cos(2 * math.pi * v)) / (math.pi))
+	end
+	
+	for i = 1, 100 do
+		points[#points + 1] = {x = boxmullerTransform(math.random(), math.random()) * x_res * 2, y = boxmullerTransform(math.random(), math.random()) * y_res * 2}
+	end
+	
+	return points
+end)() )
+
+for i = 1, #result, 3 do
+	local edge = result[i]
+	local edge1 = result[i + 1]
+	local edge2 = result[i + 2]
+
+	linkPoints(frame, Vector2.new(edge.x, edge.y), Vector2.new(edge1.x, edge1.y), 3)
+	linkPoints(frame, Vector2.new(edge1.x, edge1.y), Vector2.new(edge2.x, edge2.y), 3)
+	linkPoints(frame, Vector2.new(edge2.x, edge2.y), Vector2.new(edge.x, edge.y), 3)
+
+	createPoint(frame, edge.x, edge.y, 8)
+end--]]
+
+--[[game:GetService("RunService").RenderStepped:Connect(function()
+	print(DateTime.now().UnixTimestampMillis)
+end);]]
+
+-- benchmarking
+
+(function()
+	local testNtimes = 5 -- test it 100 times to get a good average
+	local total = 0
+	local results = {}
+	local points = 75000
+	
+	local intervalTime = 0.1
+
+	-- local points = gridDistribution(points, 0.001, 0.001, 0, 10 * 10 ^ 5)
+	 local points = regularDistribution(points, 10 * 10 ^ 5)
+	--local    points = pseudoMultivariateNormalDistribution(points, 10 * 10 ^ 5)
+	
+	for i = 1, testNtimes do
+		task.wait(intervalTime)
+
+		local t1 = DateTime.now().UnixTimestampMillis / 1000
+		table.insert(results, module.triangulate(points))
+		local t2 = DateTime.now().UnixTimestampMillis / 1000
+
+		total += t2 - t1
+
+		print("Done")
+	end
+
+	print(("(%s) Benchmarking done : process took %ss	| total : %ss"):format("GRID", total / testNtimes, total))
+end)()
