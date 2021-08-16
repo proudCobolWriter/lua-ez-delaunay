@@ -14,10 +14,10 @@ void iterate (tbl: table, callback: <void>, multithread: boolean)
 	 * Just another useless util function for ease of use-
 	 *
 	 * @param tbl array-like table containing the edges
-     * @param callback (void) function that gets called for each triangle processed
-     * @param multithread defines whether we use the built-in roblox ``task`` lib
-     *
-     * @return array-like table containing a set of 3 edges (x: float, y: float) each
+     	 * @param callback (void) function that gets called for each triangle processed
+     	 * @param multithread defines whether we use the built-in roblox ``task`` lib
+     	 *
+     	 * @return array-like table containing a set of 3 edges (x: float, y: float) each
 
 ```
 
@@ -26,7 +26,7 @@ void iterate (tbl: table, callback: <void>, multithread: boolean)
 *Standard usage*
 
 ```lua
-local delaunay = require(--[[ path to the module ]))
+local delaunay = require(--[[ path to the module ]]))
    
 local function randomPoints(iterations)
 	local points = table.create(iterations) -- generate an array-like table
@@ -37,6 +37,8 @@ local function randomPoints(iterations)
     
     return points
 end
+
+-- Given a set of tables containing 2D points, we can call delaunay.triangulate and pass our set of points
 
 local results = delaunay.triangulate( randomPoints(100) ) -- should take approximatively 0.01 second
 ```
@@ -58,7 +60,7 @@ delaunay.triangulate( randomPoints(100) );
 
 *Use case for the ``iterate`` function*
 ```lua
-local delaunay = require(--[[ path to the module ]))
+local delaunay = require(--[[ path to the module ]]))
 local results = delaunay.triangulate( randomPoints(100) ) -- should take approximatively 0.01 second
 
 local function linkPoints(parent, p1, p2, size)
@@ -94,9 +96,9 @@ end, true)
 *Note that this library only works with 2D coordinates, if you wish to apply this library in 3D, project the set of coordinates onto an infinite plante using stereographic coordinates, then run the library again. Once you computed the results you just wrap the results from the infinite plane back onto your object* [[1]](https://www.redblobgames.com/x/1842-delaunay-voronoi-sphere/)
 
 
-## Benchmarking
+## [Benchmarking](/tests/StarterPlayerScripts/LocalScript)
 
-### DISCLAIMER: The following results might not be very accurate as they were tested in Roblox, therefore they should only be used as a reference. The runtime can vary over different lua environments.
+### DISCLAIMER: The following samples might not be very accurate as they were tested in Roblox, therefore they should only be used as a reference. The runtime can vary over different lua environments.
 
 ![](/tests/benchmarkGraph.png)
 
@@ -135,8 +137,24 @@ AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 
 ## Algorithm
 
+This implementation is based on a traditional O(n * log n * n) divide-and-conquer algorithm described [there](https://github.com/Bathlamos/delaunay-triangulation) which is surprisingly doing the job with dense points set. The [QuadEdge data structure](http://www.cs.cmu.edu/afs/andrew/scs/cs/15-463/2001/pub/src/a2/quadedge.html) came handy when navigating the triangulation's topology, while still greatly minizing the amount of metamethods invoked.
+
 ## Accuracy
 
 ## Abbendum
 
+This module doesn't support native lua, it was written in Luau fashion (roblox) which occasionally uses the extended Roblox syntax 
+running this piece of code in a native lua interpreter will raise a syntax error
+
+Although, if you have little knowledge with luau you should be able to make it work, as luau features
+the C++ assignment operators and typechecking.
+	  
+Be aware that the metatables might behave differently in some cases - you might want to make some subtle changes for it to work
+
 ## Acknowledgements
+
+@Bathlamos for the [original library](https://github.com/Bathlamos/delaunay-triangulation)
+
+[Another delaunay lua implementation](https://github.com/Nolan-O/LuaDelaunayTriangulation) for some of the wording
+
+Quad-Edge article : https://github.com/Bathlamos/delaunay-triangulation)
