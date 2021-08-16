@@ -85,7 +85,7 @@ end
 local frame = urFrame or Instance.new("Frame")
 
 delaunay.iterate( results, function(triangle) -- pass an anonymous function as callback
-	local half_edge1, half_edge2, half_edge3 = triangle[1], triangle[2], triangle[3]
+    local half_edge1, half_edge2, half_edge3 = triangle[1], triangle[2], triangle[3]
     
     linkPoints(frame, Vector2.new(half_edge1.x, half_edge1.y), Vector2.new(half_edge2.x, half_edge2.y), stroke or 5)
     linkPoints(frame, Vector2.new(half_edge2.x, half_edge2.y), Vector2.new(half_edge3.x, half_edge3.y), stroke or 5)
@@ -111,7 +111,7 @@ AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 50 000 points | 0.999739s
 75 000 points | 1.751809s
 150 000 points | 3.061690s
-35 0000 points | 7.195849s
+350 000 points | 7.195849s
 
 **Uniform point distribution (random)**
 AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
@@ -122,7 +122,7 @@ AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 50 000 points | 0.278569s
 75 000 points | 13.02379s
 150 000 points | 30.23039s
-35 0000 points | 79.38119s
+350 000 points | 79.38119s
 
 **Multivariate normal distribution (multiple iterations)**
 AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
@@ -133,7 +133,7 @@ AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 50 000 points | 0.271659s
 75 000 points | 14.40540s
 150 000 points | 27.08019s
-35 0000 points | 71.71020s
+350 000 points | 71.71020s
 
 ## Algorithm
 
