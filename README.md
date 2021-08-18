@@ -141,7 +141,7 @@ This implementation is based on a traditional O(n * log n * n) divide-and-conque
 
 ## Abbendum
 
-This module doesn't support native lua, it was written in Luau fashion (roblox) which occasionally uses the extended Roblox syntax 
+This module doesn't support native lua, it was written in Luau fashion (roblox) which occasionally uses the extended Roblox syntax
 running this piece of code in a native lua interpreter will raise a syntax error
 
 Although, if you have little knowledge with luau you should be able to make it work, as luau features
@@ -156,3 +156,9 @@ Be aware that the metatables might behave differently in some cases - you might 
 [Another delaunay lua implementation](https://github.com/Nolan-O/LuaDelaunayTriangulation) for some of the wording
 
 Quad-Edge article : https://github.com/Bathlamos/delaunay-triangulation)
+
+
+
+- [ ] Additional sanity checks
+- [ ] Add Voronoi support
+- [ ] Eventually implement a faster sorting algorithm for large arrays
