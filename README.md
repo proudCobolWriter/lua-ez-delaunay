@@ -139,8 +139,6 @@ AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 
 This implementation is based on a traditional O(n * log n * n) divide-and-conquer algorithm described [there](https://github.com/Bathlamos/delaunay-triangulation) which is surprisingly doing the job with dense points set. The [QuadEdge data structure](http://www.cs.cmu.edu/afs/andrew/scs/cs/15-463/2001/pub/src/a2/quadedge.html) came handy when navigating the triangulation's topology, while still greatly minizing the amount of metamethods invoked.
 
-## Accuracy
-
 ## Abbendum
 
 This module doesn't support native lua, it was written in Luau fashion (roblox) which occasionally uses the extended Roblox syntax 
@@ -148,8 +146,8 @@ running this piece of code in a native lua interpreter will raise a syntax error
 
 Although, if you have little knowledge with luau you should be able to make it work, as luau features
 the C++ assignment operators and typechecking.
-	  
-Be aware that the metatables might behave differently in some cases - you might want to make some subtle changes for it to work
+
+Be aware that the metatables might behave differently in some cases - you might want to make tweak the Quad Edge datastructure implementation to make it work.
 
 ## Acknowledgements
 
