@@ -144,7 +144,7 @@ This implementation is based on a traditional O(n * log n * n) divide-and-conque
 
 ## Convex hull
 
-This library is also provided with [convexHull.lua](/convexHull.lua), which solves a convex hull of a given set of 2-dimensional points.
+This library is also provided with [convexHull.lua](/convexHull.lua), which solves a convex hull of a given a set of 2-dimensional points.
 The implementation follows the same logic and datastructure as the main file [(source)](https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain)
 
 ## Abbendum
