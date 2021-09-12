@@ -104,9 +104,9 @@ end, true)
 
 **Grid point distribution (equidistant points)**
 AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
------------------|--------------
-100 points       | 0.001480s
-1 000 points     | 0.020110s
+---------------- | -------------
+100 points	 | 0.001480s
+1 000 points	 | 0.020110s
 25 000 points    | 0.554840s
 50 000 points    | 0.999739s
 75 000 points    | 1.751809s
@@ -115,7 +115,7 @@ AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 
 **Uniform point distribution (random)**
 AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
------------------|--------------
+---------------- | -------------
 100 points       | 0.009019s
 1 000 points     | 0.050649s
 25 000 points    | 0.124629s
@@ -126,7 +126,7 @@ AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 
 **Multivariate normal distribution (multiple iterations)**
 AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
------------------|--------------
+---------------- | -------------
 100 points       | 0.009569s
 1 000 points     | 0.049230s
 25 000 points    | 0.116719s
