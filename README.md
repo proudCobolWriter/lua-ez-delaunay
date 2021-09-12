@@ -103,6 +103,7 @@ end, true)
 ![](/tests/benchmarkGraph.png)
 
 **Grid point distribution (equidistant points)**
+
 AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 ---------------- | -------------
 100 points	 | 0.001480s
@@ -114,6 +115,7 @@ AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 350 000 points   | 7.195849s
 
 **Uniform point distribution (random)**
+
 AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 ---------------- | -------------
 100 points       | 0.009019s
@@ -125,6 +127,7 @@ AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 350 000 points   | 79.38119s
 
 **Multivariate normal distribution (multiple iterations)**
+
 AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 ---------------- | -------------
 100 points       | 0.009569s
