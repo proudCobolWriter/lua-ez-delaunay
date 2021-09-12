@@ -105,35 +105,35 @@ end, true)
 **Grid point distribution (equidistant points)**
 AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 ---------------- | -------------
-100 points | 0.001480s
-1 000 points | 0.020110s
-25 000 points | 0.554840s
-50 000 points | 0.999739s
-75 000 points | 1.751809s
-150 000 points | 3.061690s
-350 000 points | 7.195849s
+100 points       | 0.001480s
+1 000 points     | 0.020110s
+25 000 points    | 0.554840s
+50 000 points    | 0.999739s
+75 000 points    | 1.751809s
+150 000 points   | 3.061690s
+350 000 points   | 7.195849s
 
 **Uniform point distribution (random)**
 AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 ---------------- | -------------
-100 points | 0.009019s
-1 000 points | 0.050649s
-25 000 points | 0.124629s
-50 000 points | 0.278569s
-75 000 points | 13.02379s
-150 000 points | 30.23039s
-350 000 points | 79.38119s
+100 points       | 0.009019s
+1 000 points     | 0.050649s
+25 000 points    | 0.124629s
+50 000 points    | 0.278569s
+75 000 points    | 13.02379s
+150 000 points   | 30.23039s
+350 000 points   | 79.38119s
 
 **Multivariate normal distribution (multiple iterations)**
 AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 ---------------- | -------------
-100 points | 0.009569s
-1 000 points | 0.049230s
-25 000 points | 0.116719s
-50 000 points | 0.271659s
-75 000 points | 14.40540s
-150 000 points | 27.08019s
-350 000 points | 71.71020s
+100 points       | 0.009569s
+1 000 points     | 0.049230s
+25 000 points    | 0.116719s
+50 000 points    | 0.271659s
+75 000 points    | 14.40540s
+150 000 points   | 27.08019s
+350 000 points   | 71.71020s
 
 ## Algorithm
 
