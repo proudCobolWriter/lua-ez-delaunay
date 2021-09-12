@@ -142,7 +142,7 @@ AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 
 This implementation is based on a traditional O(n * log n * n) divide-and-conquer algorithm described [there](https://github.com/Bathlamos/delaunay-triangulation) which is surprisingly doing the job with dense points set. The [QuadEdge data structure](http://www.cs.cmu.edu/afs/andrew/scs/cs/15-463/2001/pub/src/a2/quadedge.html) came handy when navigating the triangulation's topology, while still greatly minizing the amount of metamethods invoked.
 
-# Convex hull
+## Convex hull
 
 This library is also provided with [convexHull.lua](/convexHull.lua), which solves a convex hull of a given set of 2-dimensional points.
 The implementation follows the same logic and datastructure as the main file [(source)](https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain)
