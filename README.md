@@ -163,7 +163,7 @@ Be aware that the metatables might behave differently in some cases - you might 
 
 [Another delaunay lua implementation](https://github.com/Nolan-O/LuaDelaunayTriangulation) for some of the wording
 
-Quad-Edge article : https://github.com/Bathlamos/delaunay-triangulation)
+Quad-Edge article : http://www.cs.cmu.edu/afs/andrew/scs/cs/15-463/2001/pub/src/a2/quadedge.html
 
 
 
