@@ -1,6 +1,6 @@
 # Divide-and-conquer Delaunay triangulation
 
-A light ported version of the [delaunay-triangulation](https://github.com/Bathlamos/delaunay-triangulation) library written in ``js``
+A light ported version of the [delaunay-triangulation](https://github.com/Bathlamos/delaunay-triangulation) library written in ``luau``
 
 ## API
 
