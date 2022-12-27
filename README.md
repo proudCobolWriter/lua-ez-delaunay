@@ -149,7 +149,7 @@ This implementation is based on a traditional O(n * log n * n) divide-and-conque
 This library is also provided with [convexHull.lua](/convexHull.lua), which solves a convex hull of a given a set of 2-dimensional points.
 The implementation follows the same logic and datastructure as the main file [(source)](https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain)
 
-## Abbendum
+## Addendum
 
 This module doesn't support native lua, it was written in Luau fashion (roblox) which occasionally uses the extended Roblox syntax
 running this piece of code in a native lua interpreter will raise a syntax error
