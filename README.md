@@ -4,20 +4,23 @@ A light ported version of the [delaunay-triangulation](https://github.com/Bathla
 
 ## API
 
-```javascript
-void triangulate ( pointsArray: table )
-	* @param pointsArray contains a list of dictionaries as {[string]: float}
-	*
-	* @return an array-like table containing the faces
-			
-void iterate (tbl: table, callback: <void>, multithread: boolean)
-	 * Just another useless util function for ease of use-
-	 *
-	 * @param tbl array-like table containing the edges
-     	 * @param callback (void) function that gets called for each triangle processed
-     	 * @param multithread defines whether we use the built-in roblox ``task`` lib
-     	 *
-     	 * @return array-like table containing a set of 3 edges (x: float, y: float) each
+```js
+function triangulate ( pointsArray: { [number]: { x: number, y: number} } ): { any }
+	 	 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
+	 	 *
+	 	 * @param pointsArray an array-like table containing dictionaries(=hashtables) with point data
+		 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
+	 	 *
+	 	 * @return an array-like table containing the faces
+
+function iterate ( tbl: { any }, callback: ( { [number]: { x: number, y: number } } ) -> nil, defer: boolean ): { any }
+		 ^ Just another useless util function for ease of use-
+	 	 *
+		 * @param tbl an array-like table containing triangle array-like tables each containing 3 edges
+    	 * @param callback a function that gets called for each triangle processed, should always return void
+    	 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
+    	 *
+    	 * @return a set of triangles in an array-like table each containing 3 edges
 
 ```
 
@@ -26,21 +29,20 @@ void iterate (tbl: table, callback: <void>, multithread: boolean)
 *Standard usage*
 
 ```lua
-local delaunay = require(--[[ path to the module ]]))
+local delaunay = require(--[[ path to the module ]])
    
 local function randomPoints(iterations)
 	local points = table.create(iterations) -- generate an array-like table
     
     for i = 1, iterations do
-    	iterations[#iterations + 1] = {x = math.random() * 1000, y = math.random() * 1000} -- append the point to the table
+    	points[#points + 1] = {x = math.random() * 1000, y = math.random() * 1000} -- append the point to the table
     end
-    
     return points
 end
 
 -- Given a set of tables containing 2D points, we can call delaunay.triangulate and pass our set of points
 
-local results = delaunay.triangulate( randomPoints(100) ) -- should take approximatively 0.01 second
+local results = delaunay.triangulate( randomPoints(100) ) -- should take roughly 0.01 second
 ```
 
 *What it should look like in js*
@@ -49,7 +51,7 @@ local results = delaunay.triangulate( randomPoints(100) ) -- should take approxi
 import module as delaunay
 
 function randomPoints(iterations) {
-	let points = []; // Construct array
+	let points = []; // construct array
    
    	for (let i = iterations; i > 0; i--) points.push({x: Math.random() * 1000, y: Math.random() * 1000});
     return points
@@ -61,7 +63,7 @@ delaunay.triangulate( randomPoints(100) );
 *Use case for the ``iterate`` function*
 ```lua
 local delaunay = require(--[[ path to the module ]]))
-local results = delaunay.triangulate( randomPoints(100) ) -- should take approximatively 0.01 second
+local results = delaunay.triangulate( randomPoints(100) ) -- should take roughly 0.01 second
 
 local function linkPoints(parent, p1, p2, size)
 	local segment = Instance.new("Frame")
@@ -84,7 +86,7 @@ end
 
 local frame = urFrame or Instance.new("Frame")
 
-delaunay.iterate( results, function(triangle) -- pass an anonymous function as callback
+delaunay.iterate(results, function(triangle) -- pass an anonymous function as callback
     local half_edge1, half_edge2, half_edge3 = triangle[1], triangle[2], triangle[3]
     
     linkPoints(frame, Vector2.new(half_edge1.x, half_edge1.y), Vector2.new(half_edge2.x, half_edge2.y), stroke or 5)
