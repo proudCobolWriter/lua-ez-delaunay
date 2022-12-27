@@ -17,10 +17,10 @@ function iterate ( tbl: { any }, callback: ( { [number]: { x: number, y: number 
 --	 ^ Just another useless util function for ease of use-
 --	 *
 --	 * @param tbl an array-like table containing triangle array-like tables each containing 3 edges
---    	 * @param callback a function that gets called for each triangle processed, should always return void
---    	 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
---    	 *
---    	 * @return a set of triangles in an array-like table each containing 3 edges
+--	 * @param callback a function that gets called for each triangle processed, should always return void
+--	 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
+--	 *
+--	 * @return a set of triangles in an array-like table each containing 3 edges
 
 ```
 
@@ -48,7 +48,7 @@ local results = delaunay.triangulate( randomPoints(100) ) -- should take roughly
 *What it should look like in js*
 
 ```js
-import module as delaunay
+import { triangulate } as delaunay from '/example/module.js';
 
 function randomPoints(iterations) {
     	let points = []; // construct array
@@ -57,7 +57,7 @@ function randomPoints(iterations) {
     	return points
 };
 
-delaunay.triangulate( randomPoints(100) );
+delaunay( randomPoints(100) );
 ```
 
 *Use case for the ``iterate`` function*
