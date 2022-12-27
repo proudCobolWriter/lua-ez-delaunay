@@ -4,19 +4,19 @@ A light ported version of the [delaunay-triangulation](https://github.com/Bathla
 
 ## API
 
-```js
+```lua
 function triangulate ( pointsArray: { [number]: { x: number, y: number} } ): { any }
-	 	 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
-	 	 *
-	 	 * @param pointsArray an array-like table containing dictionaries(=hashtables) with point data
-		 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
-	 	 *
-	 	 * @return an array-like table containing the faces
+	 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
+	 *
+	 * @param pointsArray an array-like table containing dictionaries(=hashtables) with point data
+	 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
+	 *
+	 * @return an array-like table containing the faces
 
 function iterate ( tbl: { any }, callback: ( { [number]: { x: number, y: number } } ) -> nil, defer: boolean ): { any }
-		 ^ Just another useless util function for ease of use-
-	 	 *
-		 * @param tbl an array-like table containing triangle array-like tables each containing 3 edges
+	 ^ Just another useless util function for ease of use-
+	 *
+	 * @param tbl an array-like table containing triangle array-like tables each containing 3 edges
     	 * @param callback a function that gets called for each triangle processed, should always return void
     	 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
     	 *
@@ -32,12 +32,12 @@ function iterate ( tbl: { any }, callback: ( { [number]: { x: number, y: number 
 local delaunay = require(--[[ path to the module ]])
    
 local function randomPoints(iterations)
-	local points = table.create(iterations) -- generate an array-like table
-    
-    for i = 1, iterations do
-    	points[#points + 1] = {x = math.random() * 1000, y = math.random() * 1000} -- append the point to the table
-    end
-    return points
+    	local points = table.create(iterations) -- generate an array-like table
+    	
+    	for i = 1, iterations do
+    		points[#points + 1] = {x = math.random() * 1000, y = math.random() * 1000} -- append the point to the table
+    	end
+    	return points
 end
 
 -- Given a set of tables containing 2D points, we can call delaunay.triangulate and pass our set of points
@@ -51,10 +51,10 @@ local results = delaunay.triangulate( randomPoints(100) ) -- should take roughly
 import module as delaunay
 
 function randomPoints(iterations) {
-	let points = []; // construct array
+    	let points = []; // construct array
    
-   	for (let i = iterations; i > 0; i--) points.push({x: Math.random() * 1000, y: Math.random() * 1000});
-    return points
+    	for (let i = iterations; i > 0; i--) points.push({x: Math.random() * 1000, y: Math.random() * 1000});
+    	return points
 };
 
 delaunay.triangulate( randomPoints(100) );
@@ -87,11 +87,11 @@ end
 local frame = urFrame or Instance.new("Frame")
 
 delaunay.iterate(results, function(triangle) -- pass an anonymous function as callback
-    local half_edge1, half_edge2, half_edge3 = triangle[1], triangle[2], triangle[3]
+    	local half_edge1, half_edge2, half_edge3 = triangle[1], triangle[2], triangle[3]
     
-    linkPoints(frame, Vector2.new(half_edge1.x, half_edge1.y), Vector2.new(half_edge2.x, half_edge2.y), stroke or 5)
-    linkPoints(frame, Vector2.new(half_edge2.x, half_edge2.y), Vector2.new(half_edge3.x, half_edge3.y), stroke or 5)
-    linkPoints(frame, Vector2.new(half_edge3.x, half_edge3.y), Vector2.new(half_edge1.x, half_edge1.y), stroke or 5)
+    	linkPoints(frame, Vector2.new(half_edge1.x, half_edge1.y), Vector2.new(half_edge2.x, half_edge2.y), stroke or 5)
+    	linkPoints(frame, Vector2.new(half_edge2.x, half_edge2.y), Vector2.new(half_edge3.x, half_edge3.y), stroke or 5)
+    	linkPoints(frame, Vector2.new(half_edge3.x, half_edge3.y), Vector2.new(half_edge1.x, half_edge1.y), stroke or 5)
 end, true)
 ```
 
@@ -151,8 +151,8 @@ The implementation follows the same logic and datastructure as the main file [(s
 
 ## Addendum
 
-This module doesn't support native lua, it was written in Luau fashion (roblox) which occasionally uses the extended Roblox syntax
-running this piece of code in a native lua interpreter will raise a syntax error
+This module doesn't support native lua, it was written in Luau fashion (roblox) which occasionally uses the extended Roblox syntax,
+running this piece of code in a native lua interpreter will raise a syntax error.
 
 Although, if you have little knowledge with luau you should be able to make it work, as luau features
 the C++ assignment operators and typechecking.
