@@ -1,31 +1,34 @@
 --[[ 
-	UNDER THE GNU AFFERO GENERAL PUBLIC LICENSE, CHECK .\LICENSE FOR FURTHER INFORMATIONS
+	THIS WORK IS PROTECTED BY THE GNU AFFERO GENERAL PUBLIC LICENSE, CHECK ./LICENSE FOR FURTHER NOTICE
 	
 	
 	This is a ported version of the ``delaunay-triangulation`` library in js
 	Pardon me if the code looks like spaghetti, there's for sure a lot of cleaning up and adjustments to do
 	
 	I'll eventually make my own implementation which will provide extra functions and a better algorithm performance-wise, but as of writing it satisfies my needs for my project I used it for
-	~~also blame the repo owner for the messy maths lol~~
+	~~also blame the js repo owner for the messy maths lol~~
 	
 	I didn't plan to use classes for this project, but it was quickly becoming a mess so I decided to do otherwise,
-	i wish it won't cause any considerable performance issue.
+	I wish it won't cause any considerable performance issue.
 	
 	API:
 		
-		void triangulate ( pointsArray: table )
-			* @param pointsArray contains a list of dictionaries as {[string]: float}
-			*
-			* @return an array-like table containing the faces
-			
-		void iterate (tbl: table, callback: <void>, multithread: boolean)
-		 	* Just another useless util function for ease of use-
-		 	*
-		 	* @param tbl array-like table containing the edges
-     	 		* @param callback (void) function that gets called for each triangle processed
-     	 		* @param multithread defines whether we use the built-in roblox ``task`` lib
-     	 		*
-     	 		* @return array-like table containing a set of 3 edges (x: float, y: float) each
+		function triangulate ( pointsArray: { [number]: { x: number, y: number} } ): { any }
+				 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
+				 *
+				 * @param pointsArray an array-like table containing dictionaries(=hashtables) with point data
+				 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
+				 *
+				 * @return an array-like table containing the faces
+
+		function iterate ( tbl: { any }, callback: ( { [number]: { x: number, y: number } } ) -> nil, defer: boolean ): { any }
+				 ^ Just another useless util function for ease of use-
+				 *
+				 * @param tbl an array-like table containing triangle array-like tables each containing 3 edges
+				 * @param callback a function that gets called for each triangle processed, should always return void
+				 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
+				 *
+				 * @return a set of triangles in an array-like table each containing 3 edges
 	
 
 	ADDENDUM: This module doesn't support native lua, it was written in Luau fashion (roblox) which occasionally uses the extended Roblox syntax 
@@ -38,8 +41,8 @@
 
 ]]
 
-local throwExceptions = false -- change it to false if you want the script to handle error(s)
-local BIG_INT = 10 * 10 ^ 8
+local safeMode = true -- keep it as true if you want the triangulate function to run in a protected call (meaning that any exceptions will be caught)
+local BIG_INT = 10 * 10 ^ 8 -- while it's called an int value in the variable name to make it clearer, lua only features a "number" (float64) primitive type that allows for both integer-like and float-like numbers
 
 -- DEFINE QUADEDGE CONSTRUCTOR
 
@@ -47,7 +50,7 @@ local _quadEdgeCache = {}
 
 _quadEdgeCache.__index = _quadEdgeCache
 _quadEdgeCache.__eq = function(a, b)
-	-- Compare memory addresses
+	-- Compare memory addresses, keep in mind that those are fake and don't correspond to the metatables' memory addresses.
 	
 	return rawequal(a.address, b.address)
 end
@@ -64,9 +67,16 @@ _quadEdgeCache.__tostring = function(t)
 	)
 end
 
-function QuadEdge(...) -- I could've used __call metamethod
+--[[
+function QuadEdge ( ...:  number? | { any }? ): QuadEdge
+		 ^ Constructs an object of type QuadEdge
+	 	 *
+	 	 * @param tuple defines onext, rot and orig
+	 	 *
+	 	 * @return QuadEdge
+]]
+function QuadEdge(...: number? | { any }?): QuadEdge
 	local onext, rot, orig = ...
-	-- 69 funni number
 	
 	local self = setmetatable({}, _quadEdgeCache)
 		  self.onext = onext -- QuadEdge
@@ -121,18 +131,19 @@ end
 
 -- STATIC FUNCTIONS
 
---[[ ccw function
-	* Computes | a.x  a.y  1 |
-               	   | b.x  b.y  1 | > 0
-                   | c.x  c.y  1 |
-
-	* @param a point
-	* @param b point
-	* @param c point
-	* @return boolean
+--[[
+function ccw ( a: { x: number, y: number}, b: { x: number, y: number}, c: { x: number, y: number} ): boolean
+		 ^ Computes | a.x  a.y  1 |
+               	    | b.x  b.y  1 | > 0
+                    | c.x  c.y  1 |
+	 	 *
+	 	 * @param a point table
+	 	 * @param b point table
+	 	 * @param c point table
+	 	 *
+	 	 * @return boolean
 ]]
-
-local function ccw(a, b, c)
+local function ccw(a: { x: number, y: number}, b: { x: number, y: number}, c: { x: number, y: number}): boolean
 	return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x) > 0
 end
 
@@ -148,21 +159,23 @@ local function valid(e, base1)
 	return rightOf(e:getDest(), base1)
 end
 
---[[ inCircle function
-	* Computes  | a.x  a.y  a.x²+a.y²  1 |
-				| b.x  b.y  b.x²+b.y²  1 | > 0
-				| c.x  c.y  c.x²+c.y²  1 |
-				| d.x  d.y  d.x²+d.y²  1 |
+--[[
+function inCircle ( a: { x: number, y: number}, b: { x: number, y: number}, c: { x: number, y: number}, d: { x: number, y: number} ): boolean
+		 ^ Computes  | a.x  a.y  a.x²+a.y²  1 |
+					 | b.x  b.y  b.x²+b.y²  1 | > 0
+					 | c.x  c.y  c.x²+c.y²  1 |
+					 | d.x  d.y  d.x²+d.y²  1 |
 	
-	* Return true is d is in the circumcircle of a, b, c
-	* @param a point
-	* @param b point
-	* @param c point
-	* @param d point
-	* @return boolean
+		 * Return true is d is in the circumcircle of a, b, c
+	 	 *
+	 	 * @param a point table
+	 	 * @param b point table
+	 	 * @param c point table
+	 	 * @param d point table
+	 	 *
+	 	 * @return boolean
 ]]
-
-local function inCircle(a, b, c, d)
+local function inCircle(a: { x: number, y: number}, b: { x: number, y: number}, c: { x: number, y: number}, d: { x: number, y: number}): boolean
 	if ((a.x == d.x and a.y == d.y)
 		or (b.x == d.x and b.y == d.y)
 		or (c.x == d.x and c.y == d.y)) then return false
@@ -205,13 +218,15 @@ local function makeEdge(orig, dest)
 end
 
 --[[
-	* Attach/detach the two edges = combine/split the two rings in the dual space
-	*
-	* @param a the first QuadEdge to attach/detach
-	* @param b the second QuadEdge to attach/detach
+function splice ( a: QuadEdge, b: QuadEdge ): nil
+	 	 ^ Attach/detach the two QuadEdges = combine/split the two rings in the dual space
+	 	 *
+	 	 * @param a the first QuadEdge to attach/detach
+	 	 * @param b the second QuadEdge to attach/detach
+	 	 *
+	 	 * @return void
 ]]
-
-local function splice(a, b)
+local function splice(a: QuadEdge, b: QuadEdge): nil
 	local alpha, beta = a.onext.rot, b.onext.rot
 	local t2, t3, t4 = a.onext, beta.onext, alpha.onext
 
@@ -219,16 +234,19 @@ local function splice(a, b)
 	b.onext = t2
 	alpha.onext = t3
 	beta.onext = t4
+	
+	return
 end
 
---[[ Connect
-	 * Create a new QuadEdge by connecting 2 QuadEdges
-	 *
-	 * @param a the first QuadEdges to connect
-	 * @param b the second QuadEdges to connect
-	 * @return the new QuadEdge
+--[[
+function connect ( a: QuadEdge, b: QuadEdge ): QuadEdge
+	 	 ^ Create a new QuadEdge by connecting 2 QuadEdges
+	 	 *
+	 	 * @param a the first QuadEdge to connect
+	 	 * @param b the second QuadEdge to connect
+	 	 *
+	 	 * @return the new QuadEdge
 ]]
-
 local function connect(a, b)
 	local q = makeEdge(a:getDest(), b.orig)
 
@@ -243,17 +261,18 @@ local function deleteEdge(q)
 	splice(q:getSym(), q:getSym():getOprev())
 end
 
---[[ intSplice
-	 * Equivalent function for js Array.prototype.splice
-	 * Source: https://github.com/torch/xlua/blob/master/init.lua#L640
-	 *
-	 * @param tbl the table void intSplice works with
-	 * @param start int
-	 * @param length int
-	 * @return splice result and remainder
+--[[
+function intSplice ( tbl: { any }, start: number, length: number ): { [number]: any }
+	 	 ^ Equivalent function for js Array.prototype.splice
+	 	 * Source: https://github.com/torch/xlua/blob/master/init.lua#L640
+	 	 *
+	 	 * @param tbl an array-like table
+	 	 * @param start number
+	 	 * @param length number
+	 	 *
+	 	 * @return an array-like table containing splice result and remainder
 ]]
-
-local intSlice = function(tb1, start, length)
+local function intSlice(tbl: { any }, start: number, length: number): { [number]: any }
 	length = length or 1
 	start = start or 1
 
@@ -261,7 +280,7 @@ local intSlice = function(tb1, start, length)
 	local spliced = {}
 	local remainder = {}
 
-	for i, elt in ipairs(tb1) do
+	for i, elt in ipairs(tbl) do
 		if i < start or i >= endd then
 			table.insert(spliced, elt)
 		else
@@ -391,14 +410,15 @@ end
 
 
 return {
-	--[[ Triangulate function
-		 * Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
-		 *
-		 * @param pointsArray contains a list of dictionaries as {[string]: float}
-		 ** example use case : { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
-     	 	 * @return an array-like table containing the faces
+	--[[
+		function triangulate ( pointsArray: { [number]: { x: number, y: number} } ): { any }
+			 	 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
+			 	 *
+			 	 * @param pointsArray an array-like table containing dictionaries(=hashtables) with point data
+			 	 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
+			 	 *
+			 	 * @return an array-like table containing the faces
 	]]
-
 	triangulate = function (pointsArray)
 		local facesArrayCache = nil
 		local init = function()
@@ -509,9 +529,9 @@ return {
 			return faces
 		end
 		
-		if not throwExceptions then
+		if safeMode then
 			-- Catch eventual error(s)
-			local success, exception, results = xpcall(init, function(e)
+			local success, results = xpcall(init, function(e)
 				local traceback = debug.traceback()
 				local indent = string.rep(" ", 5 * 3 + 3)
 				
@@ -519,10 +539,9 @@ return {
 				exceptioncode = exceptioncode:sub(6, #exceptioncode)
 				
 				print(("Caught exception:  %s\n%s%s"):format(exceptioncode, indent, ({string.gsub(traceback, "\n", "\n" .. indent)})[1] ))
-				return not not e, e
 			end)
 			
-			return results or facesArrayCache
+			return success and results or facesArrayCache
 		else
 			return init()
 		end
@@ -530,17 +549,17 @@ return {
 		
 	end,
 	
-	--[[ Iterate function
-		 * Just another useless util function for ease of use-
-		 *
-		 * @param tbl array-like table containing the edges
-     	 	 * @param callback (void) function that gets called for each triangle processed
-     	 	 * @param multithread defines whether we use the built-in roblox ``task`` lib
-     	 	 * @return array-like table containing a set of 3 edges (x: float, y: float) each
-     	 
+	--[[
+		function iterate ( tbl: { any }, callback: ( { [number]: { x: number, y: number } } ) -> nil, defer: boolean ): { any }
+			 	 ^ Just another useless util function for ease of use-
+			 	 *
+			 	 * @param tbl an array-like table containing triangle array-like tables each containing 3 edges
+			 	 * @param callback a function that gets called for each triangle processed, should always return void
+			 	 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
+			 	 *
+			 	 * @return a set of triangles in an array-like table each containing 3 edges
 	]]
-	
-	iterate = function(tbl, callback, multithread)
+	iterate = function(tbl, callback, defer)
 		local triangles = {}
 		
 		for index = 1, #tbl, 3 do
@@ -548,8 +567,8 @@ return {
 			local edge1 = tbl[index + 1]
 			local edge2 = tbl[index + 2]
 			
-			triangles[#triangles + 1] = {edge, edge1, edge2}         -- append the triangle
-			if callback and multithread then task.defer(callback, {edge, edge1, edge2}) end
+			triangles[#triangles + 1] = {edge, edge1, edge2} -- append the triangle
+			if callback and multithread then task.defer(callback, {edge, edge1, edge2}) elseif callback and not multithread then callback({edge, edge1, edge2}) end
 		end
 		
 		return triangles
