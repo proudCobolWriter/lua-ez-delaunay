@@ -14,21 +14,21 @@
 	API:
 		
 		function triangulate ( pointsArray: { [number]: { x: number, y: number} } ): { any }
-				 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
-				 *
-				 * @param pointsArray an array-like table containing dictionaries(=hashtables) with point data
-				 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
-				 *
-				 * @return an array-like table containing the faces
+			 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
+			 *
+			 * @param pointsArray an array-like table containing dictionaries(=hashtables) with point data
+			 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
+			 *
+			 * @return an array-like table containing the faces
 
 		function iterate ( tbl: { any }, callback: ( { [number]: { x: number, y: number } } ) -> nil, defer: boolean ): { any }
-				 ^ Just another useless util function for ease of use-
-				 *
-				 * @param tbl an array-like table containing triangle array-like tables each containing 3 edges
-				 * @param callback a function that gets called for each triangle processed, should always return void
-				 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
-				 *
-				 * @return a set of triangles in an array-like table each containing 3 edges
+			 ^ Just another useless util function for ease of use-
+			 *
+			 * @param tbl an array-like table containing triangle array-like tables each containing 3 edges
+			 * @param callback a function that gets called for each triangle processed, should always return void
+			 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
+			 *
+			 * @return a set of triangles in an array-like table each containing 3 edges
 	
 
 	ADDENDUM: This module doesn't support native lua, it was written in Luau fashion (roblox) which occasionally uses the extended Roblox syntax 
@@ -43,6 +43,10 @@
 
 local safeMode = true -- keep it as true if you want the triangulate function to run in a protected call (meaning that any exceptions will be caught)
 local BIG_INT = 10 * 10 ^ 8 -- while it's called an int value in the variable name to make it clearer, lua only features a "number" (float64) primitive type that allows for both integer-like and float-like numbers
+
+-- TYPE DEFINITIONS
+
+
 
 -- DEFINE QUADEDGE CONSTRUCTOR
 
@@ -69,11 +73,11 @@ end
 
 --[[
 function QuadEdge ( ...:  number? | { any }? ): QuadEdge
-		 ^ Constructs an object of type QuadEdge
-	 	 *
-	 	 * @param tuple defines onext, rot and orig
-	 	 *
-	 	 * @return QuadEdge
+	 ^ Constructor function of class QuadEdge
+	 *
+	 * @param tuple defines onext, rot and orig
+	 *
+	 * @return QuadEdge
 ]]
 function QuadEdge(...: number? | { any }?): QuadEdge
 	local onext, rot, orig = ...
@@ -133,15 +137,15 @@ end
 
 --[[
 function ccw ( a: { x: number, y: number}, b: { x: number, y: number}, c: { x: number, y: number} ): boolean
-		 ^ Computes | a.x  a.y  1 |
+	 ^ Computes | a.x  a.y  1 |
                	    | b.x  b.y  1 | > 0
-                    | c.x  c.y  1 |
-	 	 *
-	 	 * @param a point table
-	 	 * @param b point table
-	 	 * @param c point table
-	 	 *
-	 	 * @return boolean
+               	    | c.x  c.y  1 |
+	 *
+	 * @param a point table
+	 * @param b point table
+	 * @param c point table
+	 *
+	 * @return boolean
 ]]
 local function ccw(a: { x: number, y: number}, b: { x: number, y: number}, c: { x: number, y: number}): boolean
 	return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x) > 0
@@ -161,19 +165,19 @@ end
 
 --[[
 function inCircle ( a: { x: number, y: number}, b: { x: number, y: number}, c: { x: number, y: number}, d: { x: number, y: number} ): boolean
-		 ^ Computes  | a.x  a.y  a.x²+a.y²  1 |
-					 | b.x  b.y  b.x²+b.y²  1 | > 0
-					 | c.x  c.y  c.x²+c.y²  1 |
-					 | d.x  d.y  d.x²+d.y²  1 |
+	 ^ Computes  | a.x  a.y  a.x²+a.y²  1 |
+		     | b.x  b.y  b.x²+b.y²  1 | > 0
+		     | c.x  c.y  c.x²+c.y²  1 |
+		     | d.x  d.y  d.x²+d.y²  1 |
 	
-		 * Return true is d is in the circumcircle of a, b, c
-	 	 *
-	 	 * @param a point table
-	 	 * @param b point table
-	 	 * @param c point table
-	 	 * @param d point table
-	 	 *
-	 	 * @return boolean
+	 * Return true is d is in the circumcircle of a, b, c
+	 *
+	 * @param a point table
+	 * @param b point table
+	 * @param c point table
+	 * @param d point table
+	 *
+	 * @return boolean
 ]]
 local function inCircle(a: { x: number, y: number}, b: { x: number, y: number}, c: { x: number, y: number}, d: { x: number, y: number}): boolean
 	if ((a.x == d.x and a.y == d.y)
@@ -219,12 +223,12 @@ end
 
 --[[
 function splice ( a: QuadEdge, b: QuadEdge ): nil
-	 	 ^ Attach/detach the two QuadEdges = combine/split the two rings in the dual space
-	 	 *
-	 	 * @param a the first QuadEdge to attach/detach
-	 	 * @param b the second QuadEdge to attach/detach
-	 	 *
-	 	 * @return void
+	 ^ Attach/detach the two QuadEdges = combine/split the two rings in the dual space
+	 *
+	 * @param a the first QuadEdge to attach/detach
+	 * @param b the second QuadEdge to attach/detach
+	 *
+	 * @return void
 ]]
 local function splice(a: QuadEdge, b: QuadEdge): nil
 	local alpha, beta = a.onext.rot, b.onext.rot
@@ -240,12 +244,12 @@ end
 
 --[[
 function connect ( a: QuadEdge, b: QuadEdge ): QuadEdge
-	 	 ^ Create a new QuadEdge by connecting 2 QuadEdges
-	 	 *
-	 	 * @param a the first QuadEdge to connect
-	 	 * @param b the second QuadEdge to connect
-	 	 *
-	 	 * @return the new QuadEdge
+	 ^ Create a new QuadEdge by connecting 2 QuadEdges
+	 *
+	 * @param a the first QuadEdge to connect
+	 * @param b the second QuadEdge to connect
+	 *
+	 * @return the new QuadEdge
 ]]
 local function connect(a, b)
 	local q = makeEdge(a:getDest(), b.orig)
@@ -263,14 +267,14 @@ end
 
 --[[
 function intSplice ( tbl: { any }, start: number, length: number ): { [number]: any }
-	 	 ^ Equivalent function for js Array.prototype.splice
-	 	 * Source: https://github.com/torch/xlua/blob/master/init.lua#L640
-	 	 *
-	 	 * @param tbl an array-like table
-	 	 * @param start number
-	 	 * @param length number
-	 	 *
-	 	 * @return an array-like table containing splice result and remainder
+	 ^ Equivalent function for js Array.prototype.splice
+	 * Source: https://github.com/torch/xlua/blob/master/init.lua#L640
+	 *
+	 * @param tbl an array-like table
+	 * @param start number
+	 * @param length number
+	 *
+	 * @return an array-like table containing splice result and remainder
 ]]
 local function intSlice(tbl: { any }, start: number, length: number): { [number]: any }
 	length = length or 1
@@ -412,12 +416,12 @@ end
 return {
 	--[[
 		function triangulate ( pointsArray: { [number]: { x: number, y: number} } ): { any }
-			 	 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
-			 	 *
-			 	 * @param pointsArray an array-like table containing dictionaries(=hashtables) with point data
-			 	 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
-			 	 *
-			 	 * @return an array-like table containing the faces
+			 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
+			 *
+			 * @param pointsArray an array-like table containing dictionaries(=hashtables) with point data
+			 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
+			 *
+			 * @return an array-like table containing the faces
 	]]
 	triangulate = function (pointsArray)
 		local facesArrayCache = nil
@@ -551,13 +555,13 @@ return {
 	
 	--[[
 		function iterate ( tbl: { any }, callback: ( { [number]: { x: number, y: number } } ) -> nil, defer: boolean ): { any }
-			 	 ^ Just another useless util function for ease of use-
-			 	 *
-			 	 * @param tbl an array-like table containing triangle array-like tables each containing 3 edges
-			 	 * @param callback a function that gets called for each triangle processed, should always return void
-			 	 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
-			 	 *
-			 	 * @return a set of triangles in an array-like table each containing 3 edges
+			 ^ Just another useless util function for ease of use-
+			 *
+			 * @param tbl an array-like table containing triangle array-like tables each containing 3 edges
+			 * @param callback a function that gets called for each triangle processed, should always return void
+			 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
+			 *
+			 * @return a set of triangles in an array-like table each containing 3 edges
 	]]
 	iterate = function(tbl, callback, defer)
 		local triangles = {}
