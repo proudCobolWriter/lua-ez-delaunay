@@ -6,21 +6,21 @@ A light ported version of the [delaunay-triangulation](https://github.com/Bathla
 
 ```lua
 function triangulate ( pointsArray: { [number]: { x: number, y: number} } ): { any }
-	 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
-	 *
-	 * @param pointsArray an array-like table containing dictionaries(=hashtables) with point data
-	 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
-	 *
-	 * @return an array-like table containing the faces
+--	 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
+--	 *
+--	 * @param pointsArray an array-like table containing dictionaries(=hashtables) with point data
+--	 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
+--	 *
+--	 * @return an array-like table containing the faces
 
 function iterate ( tbl: { any }, callback: ( { [number]: { x: number, y: number } } ) -> nil, defer: boolean ): { any }
-	 ^ Just another useless util function for ease of use-
-	 *
-	 * @param tbl an array-like table containing triangle array-like tables each containing 3 edges
-    	 * @param callback a function that gets called for each triangle processed, should always return void
-    	 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
-    	 *
-    	 * @return a set of triangles in an array-like table each containing 3 edges
+--	 ^ Just another useless util function for ease of use-
+--	 *
+--	 * @param tbl an array-like table containing triangle array-like tables each containing 3 edges
+--    	 * @param callback a function that gets called for each triangle processed, should always return void
+--    	 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
+--    	 *
+--    	 * @return a set of triangles in an array-like table each containing 3 edges
 
 ```
 
