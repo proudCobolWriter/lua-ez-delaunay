@@ -1,26 +1,50 @@
 # Divide-and-conquer Delaunay triangulation
 
-A light ported version of the [delaunay-triangulation](https://github.com/Bathlamos/delaunay-triangulation) library written in ``js``
+A fast light ported luau version of the [delaunay-triangulation](https://github.com/Bathlamos/delaunay-triangulation) library written in ``js``
+> **Note**
+> While this library was initially written to work solely with [luau](https://luau-lang.org/), I have pushed out a version compatible with lua version 5.3.6
+that doesn't feature typechecking and special operators. It can be found [here](./src/) if interested.
 
 ## API
 
+### Special types
+```ts
+//   Stores 2 dimensional vector data in a dictionary (=hashtable) containing ["x"] and ["y"] keys
+type Point = {
+	x: number,
+	y: number
+}
+
+//   Generic array-like table type
+type Array<T> = { [number]: T }
+
+//   Stores 4 values, read more about QuadEdges here: http://www.cs.cmu.edu/afs/andrew/scs/cs/15-463/2001/pub/src/a2/quadedge.html
+type QuadEdge = typeof(setmetatable({}, _quadEdgeCache)) & {
+	onext: QuadEdge,
+	mark: boolean,
+	orig: Point,
+	rot: QuadEdge
+}
+```
+
+### Functions
 ```lua
-function triangulate ( pointsArray: { [number]: { x: number, y: number} } ): { any }
+function triangulate ( pointsArray: Array<Point> ): Array<Point>
 --	 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
 --	 *
---	 * @param pointsArray an array-like table containing dictionaries(=hashtables) with point data
+--	 * @param pointsArray an array-like table containing Points
 --	 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
 --	 *
---	 * @return an array-like table containing the faces
+--	 * @return an array-like table containing face data
 
-function iterate ( tbl: { any }, callback: ( { [number]: { x: number, y: number } } ) -> nil, defer: boolean ): { any }
---	 ^ Just another useless util function for ease of use-
+function iterate ( tbl: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean ): Array<{ Array<Point> }>
+--	 ^ Customizable shortcut function that reads through data returned by function triangulate
 --	 *
---	 * @param tbl an array-like table containing triangle array-like tables each containing 3 edges
---	 * @param callback a function that gets called for each triangle processed, should always return void
+--	 * @param tbl an array-like table containing Points
+--	 * @param callback an anonymous function that gets called for each triangle processed, should always return void
 --	 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
 --	 *
---	 * @return a set of triangles in an array-like table each containing 3 edges
+--	 * @return an array-like table containing array-like tables representing triangles (each containing 3 points)
 
 ```
 
@@ -65,21 +89,20 @@ delaunay( randomPoints(100) );
 local delaunay = require(--[[ path to the module ]]))
 local results = delaunay.triangulate( randomPoints(100) ) -- should take roughly 0.01 second
 
-local function linkPoints(parent, p1, p2, size)
+local function linkPoints(parent, p1, p2)
 	local segment = Instance.new("Frame")
 	local relative = p2 - p1
 	local angle = math.atan2(relative.Y, relative.X)
 	local mag = (relative.X ^ 2 + relative.Y ^ 2) ^ 0.5
 	
 	segment.Rotation = math.deg(angle)
-	segment.Position = UDim2.new(0.1, p1.X + relative.X * 0.5, 0.1, p1.Y + relative.Y * 0.5)
-	segment.Size = UDim2.new(0, mag, 0, size or 7)
+	segment.Position = UDim2.new(0, p1.X + relative.X * 0.5, 0, p1.Y + relative.Y * 0.5)
+	segment.Size = UDim2.new(0, mag, 0, 5)
 	segment.BorderSizePixel = 0
 	segment.AnchorPoint = Vector2.new(0.5, 0.5)
 	segment.Name = "Segment/Edge"
 	segment.BackgroundColor3 = Color3.fromRGB(17, 88, 255)
 	segment.Parent = parent
-	
 	
 	return segment
 end
@@ -87,11 +110,11 @@ end
 local frame = urFrame or Instance.new("Frame")
 
 delaunay.iterate(results, function(triangle) -- pass an anonymous function as callback
-    	local half_edge1, half_edge2, half_edge3 = triangle[1], triangle[2], triangle[3]
-    
-    	linkPoints(frame, Vector2.new(half_edge1.x, half_edge1.y), Vector2.new(half_edge2.x, half_edge2.y), stroke or 5)
-    	linkPoints(frame, Vector2.new(half_edge2.x, half_edge2.y), Vector2.new(half_edge3.x, half_edge3.y), stroke or 5)
-    	linkPoints(frame, Vector2.new(half_edge3.x, half_edge3.y), Vector2.new(half_edge1.x, half_edge1.y), stroke or 5)
+	local edge1, edge2, edge3 = unpack(triangle)
+
+	linkPoints(frame, Vector2.new(edge1.x, edge1.y), Vector2.new(edge2.x, edge2.y))
+	linkPoints(frame, Vector2.new(edge2.x, edge2.y), Vector2.new(edge3.x, edge3.y))
+	linkPoints(frame, Vector2.new(edge3.x, edge3.y), Vector2.new(edge1.x, edge1.y))
 end, true)
 ```
 
@@ -100,7 +123,10 @@ end, true)
 
 ## [Benchmarking](/tests/StarterPlayerScripts/LocalScript)
 
-### DISCLAIMER: The following samples might not be very accurate as they were tested in Roblox, therefore they should only be used as a reference. The runtime can vary over different lua environments.
+### DISCLAIMER: The following samples might not be very accurate as it was tested within Roblox Studio, therefore they should only be regarded as an approximate reference. The runtime can vary over different lua environments.
+
+> **Note**
+> Benchmark hardware specs: *Intel core i5 4460 @ 3.2GHz, 8GB DDR3-1600MHz, NVidia GT705, Windows 10 64-bit*
 
 ![](/tests/benchmarkGraph.png)
 
@@ -142,7 +168,7 @@ AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 
 ## Algorithm
 
-This implementation is based on a traditional O(n * log n * n) divide-and-conquer algorithm described [there](https://github.com/Bathlamos/delaunay-triangulation) which is surprisingly doing the job with dense points set. The [QuadEdge data structure](http://www.cs.cmu.edu/afs/andrew/scs/cs/15-463/2001/pub/src/a2/quadedge.html) came handy when navigating the triangulation's topology, while still greatly minizing the amount of metamethods invoked.
+This implementation is based on a traditional O(n * log n * n) divide-and-conquer algorithm described [there](https://github.com/Bathlamos/delaunay-triangulation) that is surprisingly doing the job with dense points set. The [QuadEdge data structure](http://www.cs.cmu.edu/afs/andrew/scs/cs/15-463/2001/pub/src/a2/quadedge.html) came in handy when navigating the triangulation's topology, whilst still greatly minizing the amount of metamethods invoked.
 
 ## Convex hull
 
@@ -167,7 +193,9 @@ Be aware that the metatables might behave differently in some cases - you might 
 
 Quad-Edge article : http://www.cs.cmu.edu/afs/andrew/scs/cs/15-463/2001/pub/src/a2/quadedge.html
 
+<br>
 
+### To-do list:
 
 - [ ] Additional sanity checks
 - [ ] Add Voronoi support
