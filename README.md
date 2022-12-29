@@ -1,9 +1,23 @@
 # Divide-and-conquer Delaunay triangulation
 
-A fast light ported luau version of a [delaunay-triangulation](https://github.com/Bathlamos/delaunay-triangulation) library written in ``js``
+A straight-forward fast and light ported luau version of the [delaunay-triangulation](https://github.com/Bathlamos/delaunay-triangulation) library written in ``js``
 > **Note**
-> While this library was initially written to work solely with [luau](https://luau-lang.org/), I have pushed out a version compatible with lua version 5.3.6
-that doesn't feature typechecking and special operators. It can be found [here](./src/lua/Lua-Delaunay.lua) if interested.
+> **While this library was initially written to work solely with [luau](https://luau-lang.org/), I have pushed out a version compatible with lua version 5.3.6
+that doesn't feature typechecking and special operators. It can be found [here](./src/lua/Lua-Delaunay.lua) if interested.**
+
+## Demo
+<h5 align="center">(throttled down to ~10 segments per second)</h5>
+
+<div>
+<img src="https://cdn.discordapp.com/attachments/735132698603159562/1058109329535930378/delaunaydemo.gif" align="left" width=49.5%>
+</img>
+<img src="https://cdn.discordapp.com/attachments/735132698603159562/1058101080753451089/convexhulldemo.gif" align="right" width=49.5%>
+</img>
+</div>
+<div>
+<h4 align="center">⠀⠀⠀Delaunay demo<sup><a href="https://github.com/proudCobolWriter/lua-ez-delaunay/releases/tag/Delaunay">[download]</a></sup>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Convex-hull demo<sup><a href="https://github.com/proudCobolWriter/lua-ez-delaunay/releases/tag/Convex-hull">[download]</a></sup>
+</h4>
+</div>
 
 Table of Contents
 =================
@@ -11,11 +25,11 @@ Table of Contents
    * [API](#API)
       * [Special types](#special-types)
       * [Delaunay functions](#functions-delaunay)
-      * [Convex hull functions](#functions-convex-hull)
+      * [Convex-hull functions](#functions-convex-hull)
    * [Example usages](#example-usages)
    * [Benchmarking](#benchmarking)
    * [Algorithm specifications](#algorithm)
-   * [Convex hull](#convex-hull)
+   * [Convex-hull](#convex-hull)
    * [Addendum](#addendum)
    * [Acknowledgements](#acknowledgements)
    * [To-do list](#to-do-list)
@@ -66,7 +80,7 @@ function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, 
 --	 * @return an array-like table containing Arrays representing triangles (each containing 3 points)
 ```
 
-### Functions ([Convex hull](./src/luau/Luau-ConvexHull.lua#L75))
+### Functions ([Convex-hull](./src/luau/Luau-ConvexHull.lua#L75))
 
 ```lua
 function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean ): Array<{ Array<Point> }>
@@ -95,7 +109,7 @@ local function randomPoints(iterations)
     	return points
 end
 
--- Given a set of tables containing 2D points, we can call delaunay.triangulate and pass our set of points
+-- Given a set of Points, we can call delaunay.triangulate and pass our set of 2D points
 
 local results = delaunay.triangulate( randomPoints(100) ) -- should take roughly 0.01 second
 ```
@@ -103,7 +117,7 @@ local results = delaunay.triangulate( randomPoints(100) ) -- should take roughly
 *What it should look like in js*
 
 ```js
-import { triangulate } as delaunay from '/example/library.js';
+import { triangulate as delaunay } from '/example/library.js';
 
 function randomPoints(iterations) {
     	let points = []; // construct array
@@ -115,37 +129,38 @@ function randomPoints(iterations) {
 delaunay( randomPoints(100) );
 ```
 
-*Use case for the ``iterate`` function*
+*Use case for the ``iterate`` function* (Roblox API is being used to draw segments on the canvas)
 ```lua
+local canvasSize = Vector2.new(1000, 500)
+local canvas = urFrame or Instance.new("Frame")
+
 local delaunay = require(--[[ path to the library ]]))
 local results = delaunay.triangulate( randomPoints(100) ) -- should take roughly 0.01 second
 
-local function linkPoints(parent, p1, p2)
+local function linkPoints(parent, p1, p2, thickness)
 	local segment = Instance.new("Frame")
 	local relative = p2 - p1
 	local angle = math.atan2(relative.Y, relative.X)
 	local mag = (relative.X ^ 2 + relative.Y ^ 2) ^ 0.5
-	
+
 	segment.Rotation = math.deg(angle)
 	segment.Position = UDim2.new(0, p1.X + relative.X * 0.5, 0, p1.Y + relative.Y * 0.5)
-	segment.Size = UDim2.new(0, mag, 0, 5)
+	segment.Size = UDim2.new(0, mag, 0, thickness)
 	segment.BorderSizePixel = 0
 	segment.AnchorPoint = Vector2.new(0.5, 0.5)
 	segment.Name = "Segment/Edge"
-	segment.BackgroundColor3 = Color3.fromRGB(17, 88, 255)
+	segment.BackgroundColor3 = Color3.new(math.random(), math.random(), math.random())
 	segment.Parent = parent
-	
+
 	return segment
 end
 
-local frame = urFrame or Instance.new("Frame")
-
 delaunay.iterate(results, function(triangle) -- pass an anonymous function as callback
-	local edge1, edge2, edge3 = unpack(triangle)
+	local edge1, edge2, edge3 = triangle[1], triangle[2], triangle[3]
 
-	linkPoints(frame, Vector2.new(edge1.x, edge1.y), Vector2.new(edge2.x, edge2.y))
-	linkPoints(frame, Vector2.new(edge2.x, edge2.y), Vector2.new(edge3.x, edge3.y))
-	linkPoints(frame, Vector2.new(edge3.x, edge3.y), Vector2.new(edge1.x, edge1.y))
+	linkPoints(canvas, Vector2.new(edge1.x, edge1.y), Vector2.new(edge2.x, edge2.y), 3)
+	linkPoints(canvas, Vector2.new(edge2.x, edge2.y), Vector2.new(edge3.x, edge3.y), 3)
+	linkPoints(canvas, Vector2.new(edge3.x, edge3.y), Vector2.new(edge1.x, edge1.y), 3)
 end, true)
 ```
 
@@ -201,19 +216,19 @@ AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 
 This implementation is based on a traditional O(n * log n * n) Divide-and-conquer algorithm as described [there](https://github.com/Bathlamos/delaunay-triangulation) that is surprisingly doing the job with dense points set. The [QuadEdge data structure](http://www.cs.cmu.edu/afs/andrew/scs/cs/15-463/2001/pub/src/a2/quadedge.html) came in handy when manipulating points, whilst still greatly minizing the amount of metamethods invoked.
 
-## Convex hull
+## Convex-hull
 
 This library is provided with a Monotone-chain convex hull solver also available in both [lua](./src/lua/Lua-ConvexHull.lua) and [luau](./src/luau/Luau-ConvexHull.lua), which computes the convex hull of a given a set of 2-dimensional points.
-The implementation follows the same logic and datastructure as the main file [(wikipedia article)](https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain)
+The implementation follows the same logic and datastructure as the main file. [(wikipedia article)](https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain)
 
 ## Addendum
 
-If you plan on using this library for Roblox, please consider including the [type definitions](./src/luau/Lua-TypeDefinitions.lua] modulescript
+If you plan on using this library for Roblox, please consider including the [TypeDefinitions](./src/luau/Lua-TypeDefinitions.lua] modulescript
 as a child. If you think this is not convenient for you, you can always copy paste the type definitions from this modulescript and replace the existing references.
 
 ## Acknowledgements
 
-@Bathlamos for the [original library](https://github.com/Bathlamos/delaunay-triangulation)
+[@Bathlamos](https://github.com/Bathlamos) for the [original library](https://github.com/Bathlamos/delaunay-triangulation)
 
 [Another Delaunay lua implementation](https://github.com/Nolan-O/LuaDelaunayTriangulation) for some of the wording
 
