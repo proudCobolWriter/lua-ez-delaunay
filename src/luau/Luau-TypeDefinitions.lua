@@ -1,4 +1,4 @@
--- TYPE DEFINITIONS
+-- EXPORTING TYPE DEFINITIONS
 
 export type Point = {
 	x: number,
