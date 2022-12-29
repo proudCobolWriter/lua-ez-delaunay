@@ -9,16 +9,16 @@ Table of Contents
 =================
 
    * [API](#API)
-      * [Special types](#Special types)
-      * [Delaunay functions](#Functions (Delaunay))
-      * [Convex hull functions](#Functions (Convex hull))
-   * [Example usages](#Example usages)
+      * [Special types](#Specialtypes)
+      * [Delaunay functions](#Functions(Delaunay))
+      * [Convex hull functions](#Functions(Convex hull))
+   * [Example usages](#Exampleusages)
    * [Benchmarking](#Benchmarking)
    * [Algorithm specifications](#Algorithm)
-   * [Convex hull](#Convex hull)
+   * [Convex hull](#Convexhull)
    * [Addendum](#Addendum)
    * [Acknowledgements](#Acknowledgements)
-   * [To-do list](#To-do list)
+   * [To-do list](#To-do list:)
 
 ## API
 
@@ -26,7 +26,7 @@ Table of Contents
 ```ts
 //   Stores 4 values, read more about QuadEdges here: http://www.cs.cmu.edu/afs/andrew/scs/cs/15-463/2001/pub/src/a2/quadedge.html
 //   This type is exported, meaning you can access it by simply indexing it, ex: delaunay.QuadEdge
-type QuadEdge = typeof(setmetatable({}, _quadEdgeCache)) & {
+type QuadEdge = {
 	onext: QuadEdge,
 	mark: boolean,
 	orig: Point,
@@ -66,7 +66,7 @@ function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, 
 --	 * @return an array-like table containing Arrays representing triangles (each containing 3 points)
 ```
 
-### Functions ([Convex hull](./src/luau/Luau-Delaunay.lua#L75))
+### Functions ([Convex hull](./src/luau/Luau-ConvexHull.lua#L75))
 
 ```lua
 function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean ): Array<{ Array<Point> }>
