@@ -7,7 +7,6 @@ return {
 		 *
 		 * @return an array-like table of the polygon boundaries
 	]]
-	
 	convexHull2D = function(points)
 		local function cross(a, b, o)
 			return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x)
@@ -53,4 +52,5 @@ return {
 		table.remove(upper, #upper) -- equivalent function of ArrayPrototype.pop()
 		return merge(upper, lower)
 	end,
+	
 }
