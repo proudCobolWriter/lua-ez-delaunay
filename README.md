@@ -9,16 +9,16 @@ Table of Contents
 =================
 
    * [API](#API)
-      * [Special types](#Specialtypes)
-      * [Delaunay functions](#Functions(Delaunay))
-      * [Convex hull functions](#Functions(Convex hull))
-   * [Example usages](#Exampleusages)
-   * [Benchmarking](#Benchmarking)
-   * [Algorithm specifications](#Algorithm)
-   * [Convex hull](#Convexhull)
-   * [Addendum](#Addendum)
-   * [Acknowledgements](#Acknowledgements)
-   * [To-do list](#To-do list:)
+      * [Special types](#special-types)
+      * [Delaunay functions](#functions-delaunay)
+      * [Convex hull functions](#functions-convex-hull)
+   * [Example usages](#example-usages)
+   * [Benchmarking](#benchmarking)
+   * [Algorithm specifications](#algorithm)
+   * [Convex hull](#convex-hull)
+   * [Addendum](#addendum)
+   * [Acknowledgements](#acknowledgements)
+   * [To-do list](#to-do-list)
 
 ## API
 
