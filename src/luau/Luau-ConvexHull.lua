@@ -13,9 +13,11 @@
 				y: number
 			}
 			^ Stores 2 dimensional vector data in a dictionary (=hashtable) containing ["x"] and ["y"] keys
+			* This type is not exported, meaning you have to access it by requiring Luau-TypeDefinitions.lua
 
 			type Array<T> = { [number]: T }
 			^ Generic array-like table type
+			* This type is not exported, meaning you have to access it by requiring Luau-TypeDefinitions.lua
 		
 		### Functions
 		
