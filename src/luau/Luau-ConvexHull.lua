@@ -38,7 +38,7 @@ local SAFE_MODE = true -- same as for Luau_Delaunay, keep it as true if you want
 
 -- TYPE DEFINITIONS
 
-local TypeDefinitions = require(script.Parent:WaitForChild("TypeDefinitions"))
+local TypeDefinitions = require(script.Parent:WaitForChild("Luau-TypeDefinitions.lua"))
 
 type Point = TypeDefinitions.Point
 type Array<T> = TypeDefinitions.Array<T>
@@ -50,7 +50,7 @@ local function cross(a: Point, b: Point, o: Point): number
 end
 
 local function merge<T>(tbl1: Array<T?>, tbl2: Array<T?>): Array<T?>
-	local newArray: Array<T?> = tbl1
+	local newArray = tbl1 :: Array<T?>
 
 	for _, el in pairs(tbl2) do
 		table.insert(newArray, el)
