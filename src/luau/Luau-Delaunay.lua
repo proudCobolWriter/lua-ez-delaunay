@@ -3,7 +3,6 @@
 --[[ 
 	THIS WORK IS PROTECTED BY THE GNU AFFERO GENERAL PUBLIC LICENSE, CHECK THE LICENSE FOR FURTHER NOTICE
 	
-	
 	This is a ported version of the ``delaunay-triangulation`` library in js
 	Pardon me if the code looks like spaghetti, there's for sure a lot of cleaning up and adjustments to do
 	
@@ -18,15 +17,6 @@
 		
 		### Special types
 
-			type Point = {
-				x: number,
-				y: number
-			}
-			^ Stores 2 dimensional vector data in a dictionary (=hashtable) containing ["x"] and ["y"] keys
-
-			type Array<T> = { [number]: T }
-			^ Generic array-like table type
-
 			type QuadEdge = {
 				onext: QuadEdge,
 				mark: boolean,
@@ -34,6 +24,18 @@
 				rot: QuadEdge
 			}
 			^ Stores 4 values, read more about QuadEdges here: http://www.cs.cmu.edu/afs/andrew/scs/cs/15-463/2001/pub/src/a2/quadedge.html
+			* This type is exported, meaning you can access it by simply indexing it, ex: delaunay.QuadEdge
+
+			type Point = {
+				x: number,
+				y: number
+			}
+			^ Stores 2 dimensional vector data in a dictionary (=hashtable) containing ["x"] and ["y"] keys
+			* Unlike QuadEdge, this type is not exported, meaning you have to access it by requiring Luau-TypeDefinitions.lua
+
+			type Array<T> = { [number]: T }
+			^ Generic array-like table type
+			* Unlike QuadEdge, this type is not exported, meaning you have to access it by requiring Luau-TypeDefinitions.lua
 		
 		### Functions
 		
@@ -89,12 +91,10 @@ end
 
 -- TYPE DEFINITIONS
 
-export type Point = {
-	x: number,
-	y: number
-}
+local TypeDefinitions = require("Luau-TypeDefinitions.lua")
 
-export type Array<T> = { [number]: T }
+type Point = TypeDefinitions.Point
+type Array<T> = TypeDefinitions.Array<T>
 
 export type QuadEdge = typeof(setmetatable({}, _quadEdgeCache)) & {
 	onext: QuadEdge,
