@@ -57,7 +57,7 @@
 				 * @return an array-like table containing Arrays representing triangles (each containing 3 points)
 	
 
-		ADDENDUM: @Luau-Delaunay doesn't support native lua as it was written in a pure Luau fashion (meant for Roblox) which occasionally involves the use the extended Roblox Luau syntax (including type checking and special operators).
+		ADDENDUM: @Luau-Delaunay doesn't support native lua as it was written in a pure Luau fashion and flavor (since it was meant for Roblox) which occasionally involves the use of the extended Roblox Luau syntax (including type checking and special operators).
 			  Running this piece of code in a native lua interpreter will raise a syntax error.
 
 ]]
