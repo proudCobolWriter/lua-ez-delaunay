@@ -8,17 +8,17 @@ that doesn't feature typechecking and special operators. It can be found [here](
 Table of Contents
 =================
 
-   * [API](##API)
-      * [Special types](###Special types)
-      * [Delaunay functions](###Functions (Delaunay))
-      * [Convex hull functions](###Functions (Convex hull))
-   * [Example usages](##Example usages)
-   * [Benchmarking](##Benchmarking)
-   * [Algorithm specifications](##Algorithm)
+   * [API](#API)
+      * [Special types](#Special types)
+      * [Delaunay functions](#Functions (Delaunay))
+      * [Convex hull functions](#Functions (Convex hull))
+   * [Example usages](#Example usages)
+   * [Benchmarking](#Benchmarking)
+   * [Algorithm specifications](#Algorithm)
    * [Convex hull](#Convex hull)
-   * [Addendum](##Addendum)
-   * [Acknowledgements](##Acknowledgements)
-   * [To-do list](##To-do list)
+   * [Addendum](#Addendum)
+   * [Acknowledgements](#Acknowledgements)
+   * [To-do list](#To-do list)
 
 ## API
 
@@ -45,7 +45,7 @@ type Point = {
 }
 ```
 
-### Functions ([Delaunay](./src/luau/Luau-Delaunay.lua))
+### Functions ([Delaunay](./src/luau/Luau-Delaunay.lua#L461))
 
 ```lua
 function triangulate ( pointsArray: Array<Point> ): Array<Point>
@@ -66,7 +66,7 @@ function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, 
 --	 * @return an array-like table containing Arrays representing triangles (each containing 3 points)
 ```
 
-### Functions ([Convex hull](./src/luau/Luau-Delaunay.lua))
+### Functions ([Convex hull](./src/luau/Luau-Delaunay.lua#L75))
 
 ```lua
 function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean ): Array<{ Array<Point> }>
@@ -149,7 +149,7 @@ delaunay.iterate(results, function(triangle) -- pass an anonymous function as ca
 end, true)
 ```
 
-*Note that this library only works with 2D coordinates, if you wish to apply this library in 3D, project your set of 2D coordinates onto an infinite 2D plane using stereographic coordinates, then run the triangulate function again. Once you have computed the results all you have to do is wrap the points from the infinite 2D plane back onto your 3D mesh. You would typically do this when working with spheres.[[1]](https://www.redblobgames.com/x/1842-delaunay-voronoi-sphere/)*
+*Note that this library only works with 2D coordinates, if you wish to apply this library in 3D, project your set of 2D coordinates onto an infinite 2D plane using stereographic coordinates, then run the triangulate function again. Once you have computed the results all you have to do is wrap the points from the infinite 2D plane back onto your 3D mesh.* You would typically do this when working with spheres[[1]](https://www.redblobgames.com/x/1842-delaunay-voronoi-sphere/).
 
 
 ## [Benchmarking](/tests/StarterPlayerScripts/LocalScript)
