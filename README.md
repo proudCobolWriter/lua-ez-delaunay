@@ -62,35 +62,36 @@ type Point = {
 ### Functions ([Delaunay](./src/luau/Luau-Delaunay.lua#L461))
 
 ```lua
-function triangulate ( pointsArray: Array<Point> ): Array<Point>
+function triangulate ( pointsArray: Array<Point> ): Array<Point> | false
 --	 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
 --	 *
 --	 * @param pointsArray an Array containing Points
 --	 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
 --	 *
---	 * @return an array-like table containing face data
+--	 * @return if successful: an array-like table containing face data
+	 * @return if not: false
 
-function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean ): Array<{ Array<Point> }>
+function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean ): Array<{ Array<Point>? }>
 --	 ^ Customizable shortcut function that reads through data returned by function triangulate
 --	 *
 --	 * @param facesArray an Array containing Points
 --	 * @param callback an anonymous function that gets called for every triangles processed, should always return void
 --	 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
 --	 *
---	 * @return an array-like table containing Arrays representing triangles (each containing 3 points)
+--	 * @return an array-like table containing (empty?) Arrays representing triangles (each containing 3 points)
 ```
 
 ### Functions ([Convex-hull](./src/luau/Luau-ConvexHull.lua#L75))
 
 ```lua
-function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean ): Array<{ Array<Point> }>
---	 ^ Customizable shortcut function that reads through data returned by function triangulate
+function convexHull2D = function(pointsArray: Array<Point>): Array<Point> | false
+--	 ^ Constructs the convex hull of a set of 2-dimensional points
+--	 * source: https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
 --	 *
---	 * @param facesArray an Array containing Points
---	 * @param callback an anonymous function that gets called for every triangles processed, should always return void
---	 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
+--	 * @param pointsArray an Array containing a set of Points
 --	 *
---	 * @return an array-like table containing Arrays representing triangles (each containing 3 points)
+--	 * @return if successful: an array-like table of the polygon boundaries (convex hull in other terms), also contains a set of Points
+--	 * @return if not: false
 ```
 
 ## Example usages
@@ -164,6 +165,25 @@ delaunay.iterate(results, function(triangle) -- pass an anonymous function as ca
 end, true)
 ```
 
+*Use case for the ``iterate`` function* (using the [LÖVE](https://love2d.org/wiki/Main_Page) API)
+###### This example has been truncated and shortened for the sake of demonstration. You can check the full file [here](./Love/LoveDelaunayDemo/main.lua#L39).
+```lua
+function love.draw()
+        local screenX, screenY = love.graphics.getDimensions()
+
+        love.graphics.setLineWidth(4)
+        love.graphics.setColor({ 1, 1, 1 })
+
+        delaunay.iterate(delaunayResults, function(triangle) -- pass an anonymous function as callback
+                local point1, point2, point3 = unpack(triangle)
+
+                love.graphics.line(point1.x, point1.y, point2.x, point2.y)
+                love.graphics.line(point2.x, point2.y, point3.x, point3.y)
+                love.graphics.line(point3.x, point3.y, point1.x, point1.y)
+        end, false) -- false because we don't have access to the task Roblox library
+end
+```
+
 *Note that this library only works with 2D coordinates, if you wish to apply this library in 3D, project your set of 2D coordinates onto an infinite 2D plane using stereographic coordinates, then run the triangulate function again. Once you have computed the results all you have to do is wrap the points from the infinite 2D plane back onto your 3D mesh.* You would typically do this when working with spheres[[1]](https://www.redblobgames.com/x/1842-delaunay-voronoi-sphere/).
 
 
@@ -223,7 +243,7 @@ The implementation follows the same logic and datastructure as the main file. [(
 
 ## Addendum
 
-If you plan on using this library for Roblox, please consider including the [TypeDefinitions](./src/luau/Lua-TypeDefinitions.lua] modulescript
+If you plan on using this library for Roblox, please consider including the [TypeDefinitions](./src/luau/Luau-TypeDefinitions.lua) modulescript
 as a child. If you think this is not convenient for you, you can always copy paste the type definitions from this modulescript and replace the existing references.
 
 ## Acknowledgements
