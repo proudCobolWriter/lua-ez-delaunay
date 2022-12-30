@@ -167,7 +167,7 @@ end, true)
 ```
 
 *Use case for the ``iterate`` function* (using the [LÖVE](https://love2d.org/wiki/Main_Page) API)
-###### This example has been truncated and shortened for the sake of demonstration. You can check the full file [here](./Love/LoveDelaunayDemo/main.lua#L39).
+###### This example has been truncated and shortened for the sake of demonstration. You can check the full file [here](./Love/LoveDelaunayDemo/Source/main.lua#L39).
 ```lua
 function love.draw()
         local screenX, screenY = love.graphics.getDimensions()
