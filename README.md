@@ -101,7 +101,7 @@ function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, 
 local delaunay = require(--[[ path to the library ]])
    
 local function randomPoints(iterations)
-    	local points = table.create(iterations)
+    	local points = table.create and table.create(iterations) or {}
     	
     	for i = 1, iterations do
     		points[#points + 1] = {x = math.random() * 1000, y = math.random() * 1000} -- append the point to the table
