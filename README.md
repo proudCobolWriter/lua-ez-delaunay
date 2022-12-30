@@ -252,6 +252,8 @@ The implementation follows the same logic and datastructure as the main file. [(
 If you plan on using this library for Roblox, please consider including the [TypeDefinitions](./src/luau/Luau-TypeDefinitions.lua) modulescript
 as a child. If you think this is not convenient for you, you can always copy paste the type definitions from this modulescript and replace the existing references.
 
+<br>
+
 ## Acknowledgements
 
 [@Bathlamos](https://github.com/Bathlamos) for the [original library](https://github.com/Bathlamos/delaunay-triangulation)
