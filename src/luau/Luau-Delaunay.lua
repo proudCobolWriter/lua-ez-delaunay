@@ -39,22 +39,23 @@
 		
 		### Functions
 		
-			function triangulate ( pointsArray: Array<Point> ): Array<Point>
+			function triangulate ( pointsArray: Array<Point> ): Array<Point> | false
 				 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
 				 *
 				 * @param pointsArray an Array containing Points
 				 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
 				 *
-				 * @return an array-like table containing face data
+			 	 * @return if successful: an array-like table containing face data
+			 	 * @return if not: false
 
-			function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean ): Array<{ Array<Point> }>
+			function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean ): Array<{ Array<Point>? }>
 				 ^ Customizable shortcut function that reads through data returned by function triangulate
 				 *
 				 * @param facesArray an Array containing Points
 				 * @param callback an anonymous function that gets called for every triangles processed, should always return void
 				 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
 				 *
-				 * @return an array-like table containing Arrays representing triangles (each containing 3 points)
+				 * @return an array-like table containing (empty?) Arrays representing triangles (each containing 3 points)
 	
 
 		ADDENDUM: @Luau-Delaunay doesn't support native lua as it was written in a pure Luau fashion and flavor (since it was meant for Roblox) which occasionally involves the use of the extended Roblox Luau syntax (including type checking and special operators).
@@ -450,16 +451,16 @@ end
 
 return {
 	--[[
-		function triangulate ( pointsArray: Array<Point> ): Array<Point>
+		function triangulate ( pointsArray: Array<Point> ): Array<Point> | false
 			 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
 			 *
 			 * @param pointsArray an Array containing Points
 			 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
 			 *
-			 * @return an array-like table containing face data
+			 * @return if successful: an array-like table containing face data
+			 * @return if not: false
 	]]
-	triangulate = function (pointsArray: Array<Point>): Array<Point>
-		local facesArrayCache = nil
+	triangulate = function (pointsArray: Array<Point>): Array<Point> | false
 		local compute = function()
 			assert(type(pointsArray) == "table", "Script prompted error : an array-like table of Points must be passed to function triangulate")
 
@@ -479,16 +480,8 @@ return {
 				return a.x < b.x
 			end)
 
-			--[[ for i = 1, #vertices do
-				local decimals = 5
-				vertices[i] = {x = string.format("%." .. decimals .. "f", vertices[i].x), y = string.format("%." .. decimals .. "f", vertices[i].y)}
-			end ]]
-
-			-- Make sure vertices > 2
-			if (#vertices < 2) then
-				assert("Script prompted error : vertices count must be 3 or above")
-				return {}
-			end
+			-- Make sure there are atleast 3 vertices (to form a triangle)
+			assert(#vertices >= 3, "Script prompted error : pointsArray must contain atleast 3 or more Points")
 
 			-- Get rid of the duplicates
 			local i = #vertices
@@ -501,7 +494,6 @@ return {
 					table.remove(vertices, i) -- Expensive operation, but there should be only a little duplicates
 					duplicates += 1  -- # i=i+1
 				end
-
 				i -= 1 -- # i=i+-1
 			end
 			
@@ -566,7 +558,6 @@ return {
 				_iterate()
 			end
 
-			facesArrayCache = faces
 			return faces
 		end
 
@@ -582,7 +573,7 @@ return {
 				print(("Caught exception:  %s\n%s%s"):format(exceptioncode, indent, ({string.gsub(traceback, "\n", "\n" .. indent)})[1] ))
 			end)
 
-			return success and results or facesArrayCache
+			return success and results
 		else
 			return compute()
 		end
@@ -591,16 +582,16 @@ return {
 	end,
 
 	--[[
-		function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean ): Array<{ Array<Point> }>
+		function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean ): Array<{ Array<Point>? }>
 			 ^ Customizable shortcut function that reads through data returned by function triangulate
 			 *
 			 * @param facesArray an Array containing Points
 			 * @param callback an anonymous function that gets called for every triangles processed, should always return void
 			 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
 			 *
-			 * @return an array-like table containing Arrays representing triangles (each containing 3 points)
+			 * @return an array-like table containing (empty?) Arrays representing triangles (each containing 3 points)
 	]]
-	iterate = function(facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean): Array<{ Array<Point> }>
+	iterate = function(facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean): Array<{ Array<Point>? }>
 		local triangles = {}
 
 		for index = 1, #facesArray, 3 do
