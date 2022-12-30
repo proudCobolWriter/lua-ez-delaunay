@@ -40,7 +40,7 @@ local SAFE_MODE = true -- same as for @Luau_Delaunay, keep it as true if you wan
 
 -- TYPE DEFINITIONS
 
-local TypeDefinitions = require(script.Parent:WaitForChild("Luau-TypeDefinitions.lua"))
+local TypeDefinitions = require("TypeDefinitions")
 
 type Point = TypeDefinitions.Point
 type Array<T> = TypeDefinitions.Array<T>
