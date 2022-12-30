@@ -15,7 +15,7 @@ that doesn't feature typechecking and special operators. It can be found [here](
 </img>
 </div>
 <div>
-<h3 align="center">⠀⠀⠀Delaunay demo<sup><a href="https://github.com/proudCobolWriter/lua-ez-delaunay/releases/tag/Delaunay">[download]</a></sup>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Convex-hull demo<sup><a href="https://github.com/proudCobolWriter/lua-ez-delaunay/releases/tag/Convex-hull">[download]</a></sup>
+<h3 align="center">⠀⠀⠀Delaunay demo<sup><a href="https://github.com/proudCobolWriter/lua-ez-delaunay/releases/tag/Delaunay">[download]</a></sup>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Convex-hull demo<sup><a href="https://github.com/proudCobolWriter/lua-ez-delaunay/releases/tag/Convex-hull">[download]</a></sup>
 </h3>
 </div>
 
