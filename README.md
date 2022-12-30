@@ -1,6 +1,6 @@
 # Divide-and-conquer Delaunay triangulation
 
-A straight-forward fast and light ported luau version of the [delaunay-triangulation](https://github.com/Bathlamos/delaunay-triangulation) library written in ``js``
+A straight-forward and fast ported luau version of the [delaunay-triangulation](https://github.com/Bathlamos/delaunay-triangulation) library written in ``js``
 > **Note**
 > **While this library was initially written to work solely with [luau](https://luau-lang.org/), I have pushed out a version compatible with lua version 5.3.6
 that doesn't feature typechecking and special operators. It can be found [here](./src/lua/Lua-Delaunay.lua) if interested.**
