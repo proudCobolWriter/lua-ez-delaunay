@@ -36,7 +36,7 @@
 
 ]]
 
-local SAFE_MODE = true -- same as for Luau_Delaunay, keep it as true if you want the convexHull2D function to run in a protected call (meaning that any exceptions will be caught)
+local SAFE_MODE = true -- same as for @Luau_Delaunay, keep it as true if you want the convexHull2D function to run in a protected call (meaning that any exceptions will be caught)
 
 -- TYPE DEFINITIONS
 
