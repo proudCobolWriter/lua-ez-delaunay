@@ -15,7 +15,7 @@ that doesn't feature typechecking and special operators. It can be found [here](
 </img>
 </div>
 <div>
-<h4 align="center">⠀⠀⠀Delaunay demo<sup><a href="https://github.com/proudCobolWriter/lua-ez-delaunay/releases/tag/Delaunay">[download]</a></sup>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Convex-hull demo<sup><a href="https://github.com/proudCobolWriter/lua-ez-delaunay/releases/tag/Convex-hull">[download]</a></sup>
+<h4 align="center">⠀⠀⠀Delaunay demo<sup><a href="https://github.com/proudCobolWriter/lua-ez-delaunay/releases/tag/Delaunay">[download]</a></sup>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Convex-hull demo<sup><a href="https://github.com/proudCobolWriter/lua-ez-delaunay/releases/tag/Convex-hull">[download]</a></sup>
 </h4>
 </div>
 
@@ -129,7 +129,7 @@ function randomPoints(iterations) {
 delaunay( randomPoints(100) );
 ```
 
-*Use case for the ``iterate`` function* (Roblox API is being used to draw segments on the canvas)
+*Use case for the ``iterate`` function* (using the Roblox API)
 ```lua
 local canvasSize = Vector2.new(1000, 500)
 local canvas = urFrame or Instance.new("Frame")
@@ -156,11 +156,11 @@ local function linkPoints(parent, p1, p2, thickness)
 end
 
 delaunay.iterate(results, function(triangle) -- pass an anonymous function as callback
-	local edge1, edge2, edge3 = triangle[1], triangle[2], triangle[3]
+	local point1, point3, point3 = triangle[1], triangle[2], triangle[3]
 
-	linkPoints(canvas, Vector2.new(edge1.x, edge1.y), Vector2.new(edge2.x, edge2.y), 3)
-	linkPoints(canvas, Vector2.new(edge2.x, edge2.y), Vector2.new(edge3.x, edge3.y), 3)
-	linkPoints(canvas, Vector2.new(edge3.x, edge3.y), Vector2.new(edge1.x, edge1.y), 3)
+	linkPoints(canvas, Vector2.new(point1.x, point1.y), Vector2.new(point2.x, point2.y), 3)
+	linkPoints(canvas, Vector2.new(point2.x, point2.y), Vector2.new(point3.x, point3.y), 3)
+	linkPoints(canvas, Vector2.new(point3.x, point3.y), Vector2.new(point1.x, point1.y), 3)
 end, true)
 ```
 
