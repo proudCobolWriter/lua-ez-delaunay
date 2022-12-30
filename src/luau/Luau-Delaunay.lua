@@ -91,7 +91,7 @@ end
 
 -- TYPE DEFINITIONS
 
-local TypeDefinitions = require("Luau-TypeDefinitions.lua")
+local TypeDefinitions = require("Luau-TypeDefinitions")
 
 type Point = TypeDefinitions.Point
 type Array<T> = TypeDefinitions.Array<T>
@@ -461,7 +461,7 @@ return {
 	triangulate = function (pointsArray: Array<Point>): Array<Point>
 		local facesArrayCache = nil
 		local compute = function()
-			assert(typeof(pointsArray) == "table", "Script prompted error : an array-like table of Points must be passed to function triangulate")
+			assert(type(pointsArray) == "table", "Script prompted error : an array-like table of Points must be passed to function triangulate")
 
 			local vertices = pointsArray
 			
