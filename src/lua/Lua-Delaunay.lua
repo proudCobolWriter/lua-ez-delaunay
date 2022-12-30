@@ -17,21 +17,22 @@
 		
 		### Functions
 		
-			function triangulate ( pointsArray: Array<Point> ): Array<Point>
+			function triangulate ( pointsArray: Array<Point> ): Array<Point> | false
 				 ^ Init function, computes Guibas & Stolfi's divide-and-conquer algorithm
 				 *
 				 * @param pointsArray an Array containing Points
 				 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
 				 *
-				 * @return an array-like table containing face data
-			function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean ): Array<{ Array<Point> }>
+				 * @return if successful: an array-like table containing face data
+				 * @return if not: false
+			function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean ): Array<{ Array<Point>? }>
 				 ^ Customizable shortcut function that reads through data returned by function triangulate
 				 *
 				 * @param facesArray an Array containing Points
 				 * @param callback an anonymous function that gets called for every triangles processed, should always return void
 				 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
 				 *
-				 * @return an array-like table containing Arrays representing triangles (each containing 3 points)
+				 * @return an array-like table containing (empty?) Arrays representing triangles (each containing 3 points)
 
 ]]
 
@@ -408,7 +409,8 @@ return {
 			 * @param pointsArray an Array containing Points
 			 ** 	  ^example: { {x = 0, y = 0}, {x = 1, y = 0}, {x = 0, y = 1}, {x = 1, y = 1}, {x = 0, y = 1}, {x = 1, y = 0} }
 			 *
-			 * @return an array-like table containing face data
+			 * @return if successful: an array-like table containing face data
+                         * @return if not: false
 	]]
 	triangulate = function (pointsArray)
 		local compute = function()
@@ -439,7 +441,8 @@ return {
 
 			while (i > 1) do
 				if (vertices[i].x == vertices[i - 1].x and vertices[i].y == vertices[i - 1].y) then
-					-- Takes care of the duplicate that we just found using table.remove (ArrayPrototype.pop())
+					-- Found duplicate
+					-- Take care of the duplicate that we just found using table.remove
 					table.remove(vertices, i) -- Expensive operation, but there should be only a little duplicates
 					duplicates = duplicates + 1
 				end
@@ -531,14 +534,14 @@ return {
 	end,
 
 	--[[
-		function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean ): Array<{ Array<Point> }>
+		function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, defer: boolean ): Array<{ Array<Point>? }>
 			 ^ Customizable shortcut function that reads through data returned by function triangulate
 			 *
 			 * @param facesArray an Array containing Points
 			 * @param callback an anonymous function that gets called for every triangles processed, should always return void
 			 * @param defer defines whether or not we should make use of the built-in roblox ``task`` lib
 			 *
-			 * @return an array-like table containing Arrays representing triangles (each containing 3 points)
+			 * @return an array-like table containing (empty?) Arrays representing triangles (each containing 3 points)
 	]]
 	iterate = function(facesArray, callback, defer)
 		local triangles = {}
