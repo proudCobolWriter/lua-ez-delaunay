@@ -17,20 +17,23 @@ local function randomPoints(iterations) -- Generates a random set of 2D points w
     return tbl
 end
 
-local function generate()
+local function compute(newPoints)
     math.randomseed(os.clock())
 
-    points = randomPoints( math.random() * (MAXIMUM_POINTS - MINIMUM_POINTS) + MINIMUM_POINTS )
-    delaunayResults = delaunay.triangulate(points)
+    if newPoints then
+        points = {}
+        points = randomPoints(newPoints)
 
-    print("Generated " .. #points .. " points")
+        print("Generated " .. #points .. " points")
+    end
+    delaunayResults = delaunay.triangulate(points)
 end
 
 function love.load() -- Init function
     love.window.setTitle("Delaunay triangulation demo")
     delaunay = require("Lua-Delaunay")
 
-    generate()
+    compute(3)
 end
 
 function love.draw()
@@ -44,13 +47,13 @@ function love.draw()
         i = i + 1
         if not cachedColors[i] then cachedColors[i] = { math.random(), math.random(), math.random() } end
 
-        local edge1, edge2, edge3 = triangle[1], triangle[2], triangle[3]
-        if not edge1 or not edge2 or not edge3 then return end
+        local point1, point2, point3 = unpack(triangle)
+        if not point1 or not point2 or not point3 then return end
 
         love.graphics.setColor(cachedColors[i])
-        love.graphics.line(edge1.x + screenX * 0.05 + 5, edge1.y + screenY * 0.05 + 5, edge2.x + screenX * 0.05 + 5, edge2.y + screenY * 0.05 + 5)
-        love.graphics.line(edge2.x + screenX * 0.05 + 5, edge2.y + screenY * 0.05 + 5, edge3.x + screenX * 0.05 + 5, edge3.y + screenY * 0.05 + 5)
-        love.graphics.line(edge3.x + screenX * 0.05 + 5, edge3.y + screenY * 0.05 + 5, edge1.x + screenX * 0.05 + 5, edge1.y + screenY * 0.05 + 5)
+        love.graphics.line(point1.x + screenX * 0.05 + 5, point1.y + screenY * 0.10 + 5, point2.x + screenX * 0.05 + 5, point2.y + screenY * 0.10 + 5)
+        love.graphics.line(point2.x + screenX * 0.05 + 5, point2.y + screenY * 0.10 + 5, point3.x + screenX * 0.05 + 5, point3.y + screenY * 0.10 + 5)
+        love.graphics.line(point3.x + screenX * 0.05 + 5, point3.y + screenY * 0.10 + 5, point1.x + screenX * 0.05 + 5, point1.y + screenY * 0.10 + 5)
     end, false)
 
     love.graphics.setColor(theme == "Dark" and { 1, 1, 1 } or { 0, 0, 0 })
@@ -59,17 +62,24 @@ function love.draw()
         local x, y = point.x, point.y
         if not x or not y then return end
 
-        love.graphics.rectangle("fill", x + screenX * 0.05, y + screenY * 0.05, 10, 10)
+        love.graphics.rectangle("fill", x + screenX * 0.05, y + screenY * 0.10, 10, 10)
     end
 
-    love.graphics.print(" LMB - Switch color theme\n RMB - Regenerate points")
+    love.graphics.print("LMB - Switch color theme\nRMB - Add point\nMMB - Regenerate random points", 5, 5)
 end
 
-function love.mousepressed(_, _, button) -- Switches from dark theme to light theme and vice versa
+function love.mousepressed(x, y, button) -- Switches from dark theme to light theme and vice versa
     if button == 1 then
         theme = theme == "Dark" and "Light" or "Dark"
         love.window.setTitle(theme .. " Theme")
     elseif button == 2 then
-        generate()
+        local screenX, screenY = love.graphics.getDimensions()
+
+        table.insert(points, { x = x - screenX * 0.05, y = y - screenY * 0.10 })
+        compute()
+
+        print(string.format("Added point at location : x%i y%i", x, y))
+    elseif button == 3 then
+        compute( math.random() * (MAXIMUM_POINTS - MINIMUM_POINTS) + MINIMUM_POINTS )
     end
 end
