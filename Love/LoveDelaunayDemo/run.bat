@@ -1,3 +1,3 @@
 @echo off
 set batdir=%cd%
-"%PROGRAMFILES%\LOVE\love.exe" "%batdir%"
+"%PROGRAMFILES%\LOVE\love.exe" "%batdir%\Source"
