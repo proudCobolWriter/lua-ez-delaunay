@@ -74,7 +74,7 @@ return {
 	]]
 	convexHull2D = function(pointsArray: Array<Point>): Array<Point> | false
 		local compute = function()
-			assert(typeof(pointsArray) == "table", "Script prompted error : an array-like table of Points must be passed to function triangulate")
+			assert(type(pointsArray) == "table", "Script prompted error : an array-like table of Points must be passed to function convexHull2D")
 			
 			local pointsSet = pointsArray
 			local sortedArray = pointsArray
