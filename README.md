@@ -29,6 +29,7 @@ Table of Contents
    * [Example usages](#example-usages)
    * [Benchmarking](#benchmarking)
    * [Algorithm specifications](#algorithm)
+   * [Accuracy](#accuracy)
    * [Convex-hull](#convex-hull)
    * [Addendum](#addendum)
    * [Acknowledgements](#acknowledgements)
