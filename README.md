@@ -5,7 +5,7 @@ A straight-forward fast and light ported luau version of the [delaunay-triangula
 > **While this library was initially written to work solely with [luau](https://luau-lang.org/), I have pushed out a version compatible with lua version 5.3.6
 that doesn't feature typechecking and special operators. It can be found [here](./src/lua/Lua-Delaunay.lua) if interested.**
 
-## Demo
+## Demonstrations
 <h5 align="center">(throttled down to ~10 segments per second)</h5>
 
 <div>
@@ -15,8 +15,8 @@ that doesn't feature typechecking and special operators. It can be found [here](
 </img>
 </div>
 <div>
-<h4 align="center">⠀⠀⠀Delaunay demo<sup><a href="https://github.com/proudCobolWriter/lua-ez-delaunay/releases/tag/Delaunay">[download]</a></sup>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Convex-hull demo<sup><a href="https://github.com/proudCobolWriter/lua-ez-delaunay/releases/tag/Convex-hull">[download]</a></sup>
-</h4>
+<h3 align="center">⠀⠀⠀Delaunay demo<sup><a href="https://github.com/proudCobolWriter/lua-ez-delaunay/releases/tag/Delaunay">[download]</a></sup>⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀Convex-hull demo<sup><a href="https://github.com/proudCobolWriter/lua-ez-delaunay/releases/tag/Convex-hull">[download]</a></sup>
+</h3>
 </div>
 
 Table of Contents
