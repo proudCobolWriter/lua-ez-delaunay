@@ -85,12 +85,12 @@ function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, 
 
 ```lua
 function convexHull2D = function(pointsArray: Array<Point>): Array<Point> | false
---	 ^ Constructs the convex hull of a set of 2-dimensional points
+--	 ^ Constructs the convex-hull of a set of 2-dimensional points
 --	 * source: https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
 --	 *
 --	 * @param pointsArray an Array containing a set of Points
 --	 *
---	 * @return if successful: an array-like table of the polygon boundaries (convex hull in other terms), also contains a set of Points
+--	 * @return if successful: an array-like table of the polygon boundaries (convex-hull in other terms), also contains a set of Points
 --	 * @return if not: false
 ```
 
@@ -236,9 +236,14 @@ AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 
 This implementation is based on a traditional O(n * log n * n) Divide-and-conquer algorithm as described [there](https://github.com/Bathlamos/delaunay-triangulation) that is surprisingly doing the job with dense points set. The [QuadEdge data structure](http://www.cs.cmu.edu/afs/andrew/scs/cs/15-463/2001/pub/src/a2/quadedge.html) came in handy when manipulating points, whilst still greatly minizing the amount of metamethods invoked.
 
+## Accuracy
+
+> Due to all JavaScript numbers being 64-bit floating points, certain mathematical operations may misbehave if the points are too close to one another.
+> If two points are closer than 0.01 on either axis, simply multiply all points by a constant factor. (by your window size for example)
+
 ## Convex-hull
 
-This library is provided with a Monotone-chain convex hull solver also available in both [lua](./src/lua/Lua-ConvexHull.lua) and [luau](./src/luau/Luau-ConvexHull.lua), which computes the convex hull of a given a set of 2-dimensional points.
+This library is provided with a Monotone-chain convex-hull solver also available in both [lua](./src/lua/Lua-ConvexHull.lua) and [luau](./src/luau/Luau-ConvexHull.lua), which computes the convex-hull of a given a set of 2-dimensional points.
 The implementation follows the same logic and datastructure as the main file. [(wikipedia article)](https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain)
 
 ## Addendum
