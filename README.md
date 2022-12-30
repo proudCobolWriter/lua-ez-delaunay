@@ -244,13 +244,13 @@ This implementation is based on a traditional O(n * log n * n) Divide-and-conque
 
 ## Convex-hull
 
-This library is provided with a Monotone-chain convex-hull solver also available in both [lua](./src/lua/Lua-ConvexHull.lua) and [luau](./src/luau/Luau-ConvexHull.lua), which computes the convex-hull of a given a set of 2-dimensional points.
-The implementation follows the same logic and datastructure as the main file. [(wikipedia article)](https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain)
+This library is provided with a Monotone-chain convex-hull solver also available in both [lua](./src/lua/Lua-ConvexHull.lua) and [luau](./src/luau/Luau-ConvexHull.lua), which computes the convex-hull of a given set of 2-dimensional points.
+This implementation follows the same logic and datastructure as the Delaunay implementation. [(wikipedia article)](https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain)
 
 ## Addendum
 
 If you plan on using this library for Roblox, please consider including the [TypeDefinitions](./src/luau/Luau-TypeDefinitions.lua) modulescript
-as a child. If you think this is not convenient for you, you can always copy paste the type definitions from this modulescript and replace the existing references.
+as a child. If you think this is not convenient for you, you can always copy paste the type definitions from the modulescript and replace the existing references.
 
 <br>
 
