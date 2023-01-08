@@ -85,7 +85,7 @@ function iterate ( facesArray: Array<Point>, callback: ( Array<Point> ) -> nil, 
 ### Functions ([Convex-hull](./src/luau/Luau-ConvexHull.lua#L75))
 
 ```lua
-function convexHull2D = function(pointsArray: Array<Point>): Array<Point> | false
+function convexHull2D ( pointsArray: Array<Point> ): Array<Point> | false
 --	 ^ Constructs the convex-hull of a set of 2-dimensional points
 --	 * source: https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Convex_hull/Monotone_chain
 --	 *
