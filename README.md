@@ -235,7 +235,7 @@ AMOUNT OF POINTS | Execution time (S) in average (tested 100 times)
 
 ## Algorithm
 
-This implementation is based on a traditional O(n * log n * n) Divide-and-conquer algorithm as described [there](https://github.com/Bathlamos/delaunay-triangulation) that is surprisingly doing the job with dense points set. The [QuadEdge data structure](http://www.cs.cmu.edu/afs/andrew/scs/cs/15-463/2001/pub/src/a2/quadedge.html) came in handy when manipulating points, whilst still greatly minizing the amount of metamethods invoked.
+This implementation is based on a traditional O(n log n) Divide-and-conquer algorithm as described [there](https://github.com/Bathlamos/delaunay-triangulation) that is surprisingly doing the job with dense points set. The [QuadEdge data structure](http://www.cs.cmu.edu/afs/andrew/scs/cs/15-463/2001/pub/src/a2/quadedge.html) came in handy when manipulating points, whilst still greatly minizing the amount of metamethods invoked.
 
 ## Accuracy
 
